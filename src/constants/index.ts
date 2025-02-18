@@ -43,6 +43,7 @@ export const personalSectionLinks = [
     title: "All playlists",
     url: "/playlists",
     icon: ListVideoIcon,
+    auth: true,
   },
 ];
 
