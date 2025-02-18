@@ -1,3 +1,51 @@
+import {
+  FlameIcon,
+  HistoryIcon,
+  HomeIcon,
+  ListVideoIcon,
+  PlaySquareIcon,
+  ThumbsUpIcon,
+} from "lucide-react";
+
+export const mainSectionLinks = [
+  {
+    title: "Home",
+    url: "/",
+    icon: HomeIcon,
+  },
+  {
+    title: "Subscriptions",
+    url: "/feed/subscriptions",
+    icon: PlaySquareIcon,
+    auth: true,
+  },
+  {
+    title: "Trending",
+    url: "/feed/trending",
+    icon: FlameIcon,
+  },
+];
+
+export const personalSectionLinks = [
+  {
+    title: "History",
+    url: "/playlists/history",
+    icon: HistoryIcon,
+    auth: true,
+  },
+  {
+    title: "Liked videos",
+    url: "/playlists/liked",
+    icon: ThumbsUpIcon,
+    auth: true,
+  },
+  {
+    title: "All playlists",
+    url: "/playlists",
+    icon: ListVideoIcon,
+  },
+];
+
 export const TITLE_SYSTEM_PROMPT = `Your task is to generate an SEO-focused title for a YouTube video based on its transcript. Please follow these guidelines:
 
 - Be concise but descriptive, using relevant keywords to improve discoverability.
