@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Create a tRPC client for Client Components
 
-## Getting Started
+he trpc/client.tsx is the entrypoint when consuming your tRPC API from client components. In here, import the type definition of your tRPC router and create typesafe hooks using createTRPCReact.
 
-First, run the development server:
+## Create a tRPC caller for Server Components
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+To prefetch queries from server components, we use a tRPC caller. The `@trpc/react-query/rsc` module exports a thin wrapper around `createCaller` that integrates with your React Query client.
+
+## Hybrid data fetching pattern using both RSC & Client Components
+
+Here we leverage the speed of `server component` to prefetch data and let the `client component` not have to fetch anything initially. It will have the data ready
+
+Server Component (prefetching data)
+
+```typescript
+import { ErrorBoundary } from "react-error-boundary";
+import { HydrateClient, trpc } from "@/trpc/server";
+import { Suspense } from "react";
+
+import { PageClient } from "./client";
+
+export default async function Home() {
+  void trpc.hello.prefetch({ text: "Next.js" });
+
+  return (
+    <HydrateClient>
+      <Suspense fallback={<p>Loading...</p>}>
+        <ErrorBoundary fallback={<p>Error...</p>}>
+          <PageClient />
+        </ErrorBoundary>
+      </Suspense>
+    </HydrateClient>
+  );
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Client Component (with ready prefetched data)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```typescript
+"use client";
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+import { trpc } from "@/trpc/client";
 
-## Learn More
+export const PageClient = () => {
+  const [data] = trpc.hello.useSuspenseQuery({
+    text: "Next.js",
+  });
 
-To learn more about Next.js, take a look at the following resources:
+  return <div>{data.greeting}</div>;
+};
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+So in this approach, the data is fetched once on the server and hydrated into the Client Component.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Advantages:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- trpc.hello.prefetch() ensures that the query result is cached and hydrated into the Client Component.
+- When the Client Component mounts and calls `useSuspenseQuery`, it instantly gets the preloaded data from the cache instead of making another request.
+- No unnecessary loading state in the Client Component.
