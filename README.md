@@ -1,6 +1,6 @@
 ## Create a tRPC client for Client Components
 
-he trpc/client.tsx is the entrypoint when consuming your tRPC API from client components. In here, import the type definition of your tRPC router and create typesafe hooks using createTRPCReact.
+The trpc/client.tsx is the entrypoint when consuming your tRPC API from client components. In here, import the type definition of your tRPC router and create typesafe hooks using createTRPCReact.
 
 ## Create a tRPC caller for Server Components
 
@@ -56,4 +56,13 @@ Advantages:
 
 - trpc.hello.prefetch() ensures that the query result is cached and hydrated into the Client Component.
 - When the Client Component mounts and calls `useSuspenseQuery`, it instantly gets the preloaded data from the cache instead of making another request.
-- No unnecessary loading state in the Client Component.
+- No unnecessary loading state in the Client Component (which would be the case if we use useQuery and isLoading in Client Component)
+
+## tRPC Configuration
+
+- Enable transformer on tRPC✅
+- Add auth to tRPC context✅
+- Add protectedProcedure✅
+- Add rate limiting (using upstash)✅
+
+Serialization is the process of converting complex data structures (like objects, arrays, dates, or custom classes) into a format that can be easily stored, transferred, or processed—typically into a string (JSON, binary, etc.).
