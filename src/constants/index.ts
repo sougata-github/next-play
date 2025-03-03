@@ -63,3 +63,20 @@ export const DESCRIPTION_SYSTEM_PROMPT = `Your task is to summarize the transcri
 - Focus on the most critical information, ignoring filler, repetitive statements, or irrelevant tangents.
 - ONLY return the summary, no other text, annotations, or comments.
 - Aim for a summary that is 3-5 sentences long and no more than 200 characters.`;
+
+export const categoryNames = [
+  "Cars and vehicles",
+  "Comedy",
+  "Education",
+  "Gaming",
+  "Entertainment",
+  "Film and animation",
+  "How-to and style",
+  "Music",
+  "News and politics",
+  "People and blogs",
+  "Pets and animals",
+  "Science and technology",
+  "Sports",
+  "Travel and events",
+];

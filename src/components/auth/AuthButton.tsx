@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Loader, UserCircleIcon } from "lucide-react";
+import { UserCircleIcon } from "lucide-react";
 import {
   UserButton,
   SignInButton,
@@ -10,13 +10,14 @@ import {
   ClerkLoading,
   ClerkLoaded,
 } from "@clerk/nextjs";
+import { Skeleton } from "../ui/skeleton";
 
 const AuthButton = () => {
   return (
     <>
       <ClerkLoading>
-        <div className="w-12 h-8 flex items-center justify-center">
-          <Loader className="size-[18px] transition-all animate-spin" />
+        <div className="flex items-center justify-center">
+          <Skeleton className="h-8 w-[104px] rounded-full" />
         </div>
       </ClerkLoading>
 

@@ -52,11 +52,27 @@ export const PageClient = () => {
 
 So in this approach, the data is fetched once on the server and hydrated into the Client Component.
 
+- Fetch and serialize data on the server.
+
+- Send the serialized data to the client.
+
+- On the client → `<HydrateClient>` deserializes and restores the data into React Query's cache.
+
+Hydrating the data means restoring `pre-fetched` or `serialized data` back into its original format on the client-side so it can be used efficiently.
+
+Serialization is the process of converting complex data structures (like objects, arrays, dates, or custom classes) into a format that can be easily stored, transferred, or processed—typically into a string (JSON, binary, etc.).
+
+Since we are prefetching data in page.tsx, Next.js will consider it static, so we must declare `export const dynamic = "force-dynamic"`.
+
 Advantages:
 
 - trpc.hello.prefetch() ensures that the query result is cached and hydrated into the Client Component.
+
 - When the Client Component mounts and calls `useSuspenseQuery`, it instantly gets the preloaded data from the cache instead of making another request.
+
 - No unnecessary loading state in the Client Component (which would be the case if we use useQuery and isLoading in Client Component)
+
+- Hydrate Client in the same component/page where you are prefetching data.
 
 ## tRPC Configuration
 
@@ -65,4 +81,11 @@ Advantages:
 - Add protectedProcedure✅
 - Add rate limiting (using upstash)✅
 
-Serialization is the process of converting complex data structures (like objects, arrays, dates, or custom classes) into a format that can be easily stored, transferred, or processed—typically into a string (JSON, binary, etc.).
+## Video Categories
+
+- Create categories schema
+- Push changes to db
+- Seed categories
+- Organise tRPC routers
+- Prefetch categories
+- Create categories component

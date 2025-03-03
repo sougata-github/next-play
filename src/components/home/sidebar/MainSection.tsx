@@ -20,7 +20,7 @@ const MainSection = () => {
   return (
     <SidebarGroup>
       <SidebarGroupContent>
-        <SidebarMenu>
+        <SidebarMenu className="mt-6 md:mt-0">
           {mainSectionLinks.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
