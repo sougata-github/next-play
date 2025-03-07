@@ -83,9 +83,15 @@ Advantages:
 
 ## Video Categories
 
-- Create categories schema
-- Push changes to db
-- Seed categories
-- Organise tRPC routers
-- Prefetch categories
-- Create categories component
+- Create categories schema✅
+- Push changes to db✅
+- Seed categories✅
+- Organise tRPC routers✅
+- Prefetch categories✅
+- Create categories component✅
+
+## Stuido layout
+
+- Create studio route group✅
+- Create studio layout✅
+- Protect studio routes

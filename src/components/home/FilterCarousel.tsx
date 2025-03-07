@@ -51,7 +51,6 @@ const FilterCarousel = ({ value, isLoading, onSelect, data }: Props) => {
         className="w-full px-12"
       >
         {/* left fade */}
-
         <div
           className={cn(
             "absolute left-12 top-0 bottom-0 w-12 z-10 bg-gradient-to-r from-white to-transparent pointer-events-none",
@@ -84,6 +83,7 @@ const FilterCarousel = ({ value, isLoading, onSelect, data }: Props) => {
                 </Skeleton>
               </CarouselItem>
             ))}
+
           {!isLoading &&
             data.map((item) => (
               <CarouselItem
@@ -105,7 +105,6 @@ const FilterCarousel = ({ value, isLoading, onSelect, data }: Props) => {
       </Carousel>
 
       {/* right fade */}
-
       <div
         className={cn(
           "absolute right-12 top-0 bottom-0 w-12 z-10 bg-gradient-to-l from-white to-transparent pointer-events-none",
