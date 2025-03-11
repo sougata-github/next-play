@@ -22,7 +22,7 @@ const StudioSidebar = () => {
 
   return (
     <Sidebar className="pt-16 z-40" collapsible="icon">
-      <SidebarContent className="bg-background mt-2">
+      <SidebarContent className="bg-background">
         <SidebarGroup>
           <SidebarMenu>
             <StudioSidebarHeader />

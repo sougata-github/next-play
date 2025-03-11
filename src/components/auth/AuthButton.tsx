@@ -17,7 +17,7 @@ const AuthButton = () => {
     <>
       <ClerkLoading>
         <div className="flex items-center justify-center">
-          <Skeleton className="h-8 w-[104px] rounded-full" />
+          <Skeleton className="size-8 rounded-full" />
         </div>
       </ClerkLoading>
 

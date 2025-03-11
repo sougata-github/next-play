@@ -80,3 +80,5 @@ export const categoryNames = [
   "Sports",
   "Travel and events",
 ];
+
+export const DEFAULT_LIMIT = 5;

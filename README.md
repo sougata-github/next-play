@@ -60,9 +60,13 @@ So in this approach, the data is fetched once on the server and hydrated into th
 
 Hydrating the data means restoring `pre-fetched` or `serialized data` back into its original format on the client-side so it can be used efficiently.
 
-Serialization is the process of converting complex data structures (like objects, arrays, dates, or custom classes) into a format that can be easily stored, transferred, or processed—typically into a string (JSON, binary, etc.).
+- Serialization is the process of converting complex data structures (like objects, arrays, dates, or custom classes) into a format that can be easily stored, transferred, or processed—typically into a string (JSON, binary, etc.).
 
-Since we are prefetching data in page.tsx, Next.js will consider it static, so we must declare `export const dynamic = "force-dynamic"`.
+- Since we are prefetching data in page.tsx, Next.js will consider it static, so we must declare `export const dynamic = "force-dynamic"`.
+
+- Hydrate Client in the same component/page where you are prefetching data.
+
+- When using `prefetchInfinite` in page.tsx, use `useSuspenseInfiniteQuery` in corresponding client component.
 
 Advantages:
 
@@ -71,8 +75,6 @@ Advantages:
 - When the Client Component mounts and calls `useSuspenseQuery`, it instantly gets the preloaded data from the cache instead of making another request.
 
 - No unnecessary loading state in the Client Component (which would be the case if we use useQuery and isLoading in Client Component)
-
-- Hydrate Client in the same component/page where you are prefetching data.
 
 ## tRPC Configuration
 
@@ -94,4 +96,17 @@ Advantages:
 
 - Create studio route group✅
 - Create studio layout✅
-- Protect studio routes
+- Protect studio routes✅
+
+## Studio Videos
+
+- Create videos schema✅
+- Push db changes✅
+- Create studio procedures✅
+- Add video record creation✅
+
+## Infinite Loading
+
+- Add Suspense and error boundaries✅
+- Create reusable InfiniteScroll component✅
+- Demonstrate infinite scroll✅

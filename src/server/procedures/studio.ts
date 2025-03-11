@@ -1,0 +1,65 @@
+import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { db } from "@/db";
+import { z } from "zod";
+
+export const studioRouter = createTRPCRouter({
+  getMany: protectedProcedure
+    .input(
+      z.object({
+        //cursor will be used to track from where to start quering
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(), //not required for first request
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input;
+      const { id: userId } = ctx.user;
+
+      const data = await db.video.findMany({
+        where: {
+          userId,
+          ...(cursor && {
+            OR: [
+              {
+                updatedAt: {
+                  lt: cursor.updatedAt,
+                },
+              },
+              {
+                updatedAt: cursor.updatedAt,
+                id: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        take: limit + 1, // add one to check if more data exists
+      });
+
+      const hasMore = data.length > limit;
+
+      //remove last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      //update cursor
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            updatedAt: lastItem.updatedAt,
+          }
+        : null;
+
+      return {
+        items,
+        nextCursor,
+      };
+    }),
+});
