@@ -36,7 +36,14 @@ model Video {
   id String @id @default(uuid())
   title String 
   description String?
-  
+
+  muxStatus String
+  muxAssetId String? @unique
+  muxUploadId String @unique
+  muxPlaybackId String? @unique
+  muxTrackId String? @unique
+  muxTrackStatus String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
     

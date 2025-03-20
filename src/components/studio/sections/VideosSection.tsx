@@ -75,8 +75,8 @@ const VideosSectionSuspense = () => {
 
 const VideosSection = () => {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <ErrorBoundary fallback={<p>Error...</p>}>
+    <Suspense fallback={<p className="pl-4">Loading...</p>}>
+      <ErrorBoundary fallback={<p className="pl-4">Error...</p>}>
         <VideosSectionSuspense />
       </ErrorBoundary>
     </Suspense>
