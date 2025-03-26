@@ -118,6 +118,20 @@ Advantages:
 - Get a 15-second video✅
 - Create upload modal✅
 
-When we upload a video, it takes time to process, hence webhooks and since webhooks are anonymous, we need a way to preserve which user has upload, hence `userId` (metadata) to `passthrough`.
+When we upload a video, it takes time to process, hence webhooks and since webhooks are anonymous, we need a way to preserve which user has uploaded, hence `userId` (metadata) to `passthrough`.
 
-When we create a video, we also create an upload url. We send this back to the Uploader and use it as an endpoint. After we upload the video, the webhook with `video.asset.created` is triggered and we update the video with the `upload url` (muxUploadId) record in our db with the status and asset id received from mux payload.
+When we create a video, we also generate an upload url using Mux. We send this back to the Uploader and use it as an endpoint. After we upload the video, the webhook with `video.asset.created` is triggered and we update the video with the `upload url` (muxUploadId) record in our db with the status and asset id received from mux payload.
+
+## Mux Webhooks
+
+- Update video schema✅
+- Push db changes✅
+- Handle `video.asset.ready` event✅
+  - assign thumbnail
+  - assign preview
+- Handle `video.asset.errored` event✅
+  - update status
+- Handle `video.asset.deleted` event✅
+  - delete from db
+- Handle `video.asset.track.ready` event✅
+  - update trackId and trackStatus

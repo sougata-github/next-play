@@ -32,11 +32,20 @@ model Category {
   @@index([name])
 }
 
+enum Visibility {
+  PRIVATE
+  PUBLIC
+}
+
 model Video {
   id String @id @default(uuid())
   title String 
   description String?
-
+  thumbnailUrl String?
+  previewUrl String?
+  duration Int @default(0)
+  visibility Visibility @default(PRIVATE)
+  
   muxStatus String
   muxAssetId String? @unique
   muxUploadId String @unique
