@@ -135,3 +135,11 @@ When we create a video, we also generate an upload url using Mux. We send this b
   - delete from db
 - Handle `video.asset.track.ready` event✅
   - update trackId and trackStatus
+
+## Video Form
+
+- Add Skeleton to videos-section✅
+- Create video form page✅
+- Create video player✅
+- Add ability to update video information✅
+  - Title, Description, Category, Visibility✅

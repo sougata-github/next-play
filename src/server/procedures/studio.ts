@@ -1,8 +1,32 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 
 export const studioRouter = createTRPCRouter({
+  getOne: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+      const { id } = input;
+
+      const video = await db.video.findUnique({
+        where: {
+          id,
+          userId,
+        },
+      });
+
+      if (!video) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return video;
+    }),
   getMany: protectedProcedure
     .input(
       z.object({
