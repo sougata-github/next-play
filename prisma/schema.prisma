@@ -41,8 +41,13 @@ model Video {
   id String @id @default(uuid())
   title String 
   description String?
+  
   thumbnailUrl String?
+  thumbnailKey String?
+  
   previewUrl String?
+  previewKey String?
+
   duration Int @default(0)
   visibility Visibility @default(PRIVATE)
   

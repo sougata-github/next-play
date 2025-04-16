@@ -5,6 +5,7 @@ import {
   VideoAssetDeletedWebhookEvent,
   VideoAssetTrackReadyWebhookEvent,
 } from "@mux/mux-node/resources/webhooks";
+import { UTApi } from "uploadthing/server";
 import { headers } from "next/headers";
 import { mux } from "@/lib/mux";
 import { db } from "@/db";
@@ -75,10 +76,25 @@ export async function POST(req: Request) {
         return new Response("No upload ID found", { status: 400 });
       }
 
-      const thumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
-      const previewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
-
+      const tempThumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
+      const tempPreviewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
       const duration = data.duration ? Math.round(data.duration * 1000) : 0;
+
+      //upload to uploadthing
+      const utapi = new UTApi();
+      const [uploadedThumbnail, uploadedPreview] =
+        await utapi.uploadFilesFromUrl([tempThumbnailUrl, tempPreviewUrl]);
+
+      if (!uploadedThumbnail.data || !uploadedPreview.data) {
+        return new Response("Failed to upload thumbnail", { status: 500 });
+      }
+
+      const { key: thumbnailKey, ufsUrl: thumbnailUrl } =
+        uploadedThumbnail.data;
+
+      const { key: previewKey, ufsUrl: previewUrl } = uploadedPreview.data;
+
+      console.log("Updating video to ready status...");
 
       await db.video.update({
         where: {
@@ -89,10 +105,15 @@ export async function POST(req: Request) {
           muxPlaybackId: playbackId,
           muxAssetId: data.id,
           thumbnailUrl,
+          thumbnailKey,
           previewUrl,
+          previewKey,
           duration,
         },
       });
+
+      console.log("Video ready");
+
       break;
     }
     case "video.asset.errored": {

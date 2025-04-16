@@ -143,3 +143,19 @@ When we create a video, we also generate an upload url using Mux. We send this b
 - Create video player✅
 - Add ability to update video information✅
   - Title, Description, Category, Visibility✅
+
+## Video Thumbnails
+
+- Integrate UploadThing✅
+- Add thumbnail upload functionality✅
+- Add thumbnail restore functionality✅
+- Refactor thumbnail fields in the schema✅
+  - Proper UploadThing cleanup✅
+
+Unified approach to uploading files. Every file should be on `uploadthing`.
+
+when creating/restoring a video:
+
+get mux asset url (temp thumbnail) -> upload to uploadthing using utapi -> get url from uploadthing -> update db.
+
+optimisation for future: load the entire form element until video is ready. use video.preparing for that. Show an overlay on top of the form.

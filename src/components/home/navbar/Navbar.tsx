@@ -7,7 +7,7 @@ import SearchInput from "./SearchInput";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 h-16 flex items-center px-2 pr-5 z-50 bg-background">
+    <nav className="fixed top-0 left-0 right-0 h-16 flex items-center px-2 pr-5 z-50 bg-background border-b">
       <div className="flex items-center gap-4 w-full">
         {/* Menu and Logo */}
         <div className="flex items-center flex-shrink-0">

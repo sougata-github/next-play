@@ -7,7 +7,7 @@ export const videoUpdateSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().nullable().optional(),
 
-  // thumbnailUrl: z.string().url().nullable().optional(),
+  thumbnailUrl: z.string().url().nullable().optional(),
   // previewUrl: z.string().url().nullable().optional(),
 
   visibility: VisibilityEnum.default("PRIVATE"),

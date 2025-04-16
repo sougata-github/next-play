@@ -1,11 +1,77 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { videoUpdateSchema } from "@/schemas/index";
+import { UTApi } from "uploadthing/server";
 import { TRPCError } from "@trpc/server";
 import { mux } from "@/lib/mux";
 import { db } from "@/db";
 import { z } from "zod";
 
 export const videosRouter = createTRPCRouter({
+  restore: protectedProcedure
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const existingVideo = await db.video.findUnique({
+        where: {
+          id: input.videoId,
+          userId,
+        },
+      });
+
+      if (!existingVideo) throw new TRPCError({ code: "NOT_FOUND" });
+
+      //file cleanup before restoring thumbnail
+      if (existingVideo.thumbnailKey) {
+        const utapi = new UTApi();
+
+        await utapi.deleteFiles(existingVideo.thumbnailKey);
+        await db.video.update({
+          where: {
+            id: input.videoId,
+            userId,
+          },
+          data: {
+            thumbnailKey: null,
+            thumbnailUrl: null,
+          },
+        });
+      }
+
+      if (!existingVideo.muxPlaybackId)
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      //uploading mux asset ti uploadthing
+      const tempThumbnailUrl = `https://image.mux.com/${existingVideo.muxPlaybackId}/thumbnail.jpg`;
+
+      const utapi = new UTApi();
+      const uploadedThumbnail = await utapi.uploadFilesFromUrl(
+        tempThumbnailUrl
+      );
+
+      if (!uploadedThumbnail.data)
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+      const { key: thumbnailKey, ufsUrl: thumbnailUrl } =
+        uploadedThumbnail.data;
+
+      const updatedVideo = await db.video.update({
+        where: {
+          id: input.videoId,
+          userId,
+        },
+        data: {
+          thumbnailUrl,
+          thumbnailKey,
+        },
+      });
+
+      return updatedVideo;
+    }),
   delete: protectedProcedure
     .input(
       z.object({
@@ -23,6 +89,12 @@ export const videosRouter = createTRPCRouter({
       });
 
       if (!deletedVideo) throw new TRPCError({ code: "NOT_FOUND" });
+
+      //file cleanup after deletion
+      if (deletedVideo.thumbnailKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(deletedVideo.thumbnailKey);
+      }
 
       return deletedVideo;
     }),
