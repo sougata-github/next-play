@@ -14,14 +14,14 @@ const VideoThumbnail = ({ title, imageUrl, previewUrl, duration }: Props) => {
     <div className="relative group">
       <div className="relative w-full overflow-hidden rounded-lg aspect-video">
         <Image
-          src={imageUrl ?? THUMBNAIL_FALLBACK}
+          src={imageUrl || THUMBNAIL_FALLBACK}
           alt={title}
           fill
           className="h-full w-full object-cover group-hover:opacity-0 transition-all"
         />
         <Image
           unoptimized={!!previewUrl}
-          src={previewUrl ?? THUMBNAIL_FALLBACK}
+          src={previewUrl || THUMBNAIL_FALLBACK}
           alt={title}
           fill
           className="h-full w-full object-cover group-hover:opacity-100 opacity-0 transition-all"

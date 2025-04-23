@@ -96,6 +96,11 @@ export const videosRouter = createTRPCRouter({
         await utapi.deleteFiles(deletedVideo.thumbnailKey);
       }
 
+      if (deletedVideo.previewKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(deletedVideo.previewKey);
+      }
+
       return deletedVideo;
     }),
   update: protectedProcedure

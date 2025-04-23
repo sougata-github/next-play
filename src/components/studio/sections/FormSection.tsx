@@ -290,7 +290,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                           <Image
                             fill
                             alt="Thumbnail"
-                            src={video.thumbnailUrl ?? THUMBNAIL_FALLBACK}
+                            src={video.thumbnailUrl || THUMBNAIL_FALLBACK}
                             className="object-cover"
                           />
                         )}

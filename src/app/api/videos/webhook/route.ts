@@ -80,37 +80,50 @@ export async function POST(req: Request) {
       const tempPreviewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
       const duration = data.duration ? Math.round(data.duration * 1000) : 0;
 
-      //upload to uploadthing
-      const utapi = new UTApi();
-      const [uploadedThumbnail, uploadedPreview] =
-        await utapi.uploadFilesFromUrl([tempThumbnailUrl, tempPreviewUrl]);
-
-      if (!uploadedThumbnail.data || !uploadedPreview.data) {
-        return new Response("Failed to upload thumbnail", { status: 500 });
-      }
-
-      const { key: thumbnailKey, ufsUrl: thumbnailUrl } =
-        uploadedThumbnail.data;
-
-      const { key: previewKey, ufsUrl: previewUrl } = uploadedPreview.data;
-
-      console.log("Updating video to ready status...");
-
-      await db.video.update({
+      const existingVideo = await db.video.findUnique({
         where: {
           muxUploadId: data.upload_id,
         },
-        data: {
-          muxStatus: data.status,
-          muxPlaybackId: playbackId,
-          muxAssetId: data.id,
-          thumbnailUrl,
-          thumbnailKey,
-          previewUrl,
-          previewKey,
-          duration,
-        },
       });
+
+      if (!existingVideo) {
+        return new Response("Cannot find video to update", { status: 500 });
+      }
+
+      console.log("Updating video to ready status...");
+
+      //upload to uploadthing when no existing key
+      if (!existingVideo.thumbnailKey && !existingVideo.previewKey) {
+        const utapi = new UTApi();
+        const [uploadedThumbnail, uploadedPreview] =
+          await utapi.uploadFilesFromUrl([tempThumbnailUrl, tempPreviewUrl]);
+
+        if (!uploadedThumbnail.data || !uploadedPreview.data) {
+          return new Response("Failed to upload thumbnail", { status: 500 });
+        }
+
+        const { key: thumbnailKey, ufsUrl: thumbnailUrl } =
+          uploadedThumbnail.data;
+
+        const { key: previewKey, ufsUrl: previewUrl } = uploadedPreview.data;
+
+        //update thumbnail
+        await db.video.update({
+          where: {
+            muxUploadId: data.upload_id,
+          },
+          data: {
+            muxStatus: data.status,
+            muxPlaybackId: playbackId,
+            muxAssetId: data.id,
+            thumbnailUrl,
+            thumbnailKey,
+            previewUrl,
+            previewKey,
+            duration,
+          },
+        });
+      }
 
       console.log("Video ready");
 
@@ -140,15 +153,30 @@ export async function POST(req: Request) {
         return new Response("No upload ID found", { status: 400 });
       }
 
-      // console.log("Deleting Video...");
+      console.log("Deleting Video...");
 
-      await db.video.delete({
+      const deletedVideo = await db.video.delete({
         where: {
           muxUploadId: data.upload_id,
         },
       });
 
-      // console.log("Video Deleted");
+      console.log("Video Deleted");
+
+      //uploadthing cleanup
+      console.log("Deleting files from uploadthing...");
+
+      if (deletedVideo.thumbnailKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(deletedVideo.thumbnailKey);
+      }
+
+      if (deletedVideo.previewKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(deletedVideo.previewKey);
+      }
+
+      console.log("Files deleted from uploadthing.");
 
       break;
     }
