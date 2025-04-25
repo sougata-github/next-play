@@ -159,3 +159,19 @@ when creating/restoring a video:
 get mux asset url (temp thumbnail) -> upload to uploadthing using utapi -> get url from uploadthing -> update db.
 
 optimisation for future: load the entire form element until video is ready. use video.preparing for that. Show an overlay on top of the form.
+
+## AI background jobs
+
+Why background jobs?
+
+- Avoid timeout from long-running tasks
+  - problematic with AI integrations
+- Ensure retries in case of failure
+
+- Integrate Upstash workflow✅
+- Trigger a background job✅
+- Add AI using vercel SDK✅
+- Add background jobs✅
+  - Generate title✅
+  - Generate description
+  - Generate thumbnail

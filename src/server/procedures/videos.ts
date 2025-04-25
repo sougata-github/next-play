@@ -1,12 +1,41 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { videoUpdateSchema } from "@/schemas/index";
 import { UTApi } from "uploadthing/server";
+import { workflow } from "@/lib/workflow";
 import { TRPCError } from "@trpc/server";
 import { mux } from "@/lib/mux";
 import { db } from "@/db";
 import { z } from "zod";
 
 export const videosRouter = createTRPCRouter({
+  generateTitle: protectedProcedure
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const {} = await workflow.trigger({
+        url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/title`,
+        body: { userId, videoId: input.videoId },
+      });
+    }),
+  generateDescription: protectedProcedure
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const {} = await workflow.trigger({
+        url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/description`,
+        body: { userId, videoId: input.videoId },
+      });
+    }),
   restore: protectedProcedure
     .input(
       z.object({

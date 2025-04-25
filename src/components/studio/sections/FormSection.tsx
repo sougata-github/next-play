@@ -52,6 +52,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { THUMBNAIL_FALLBACK } from "@/constants";
 import ThumbnailUploadModal from "@/components/ThumbnailUploadModal";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Props {
   videoId: string;
@@ -168,6 +174,30 @@ const FormSectionSuspense = ({ videoId }: Props) => {
     },
   });
 
+  const generateTitle = trpc.videos.generateTitle.useMutation({
+    onSuccess: () => {
+      toast.success("Generating video title", {
+        description: "This may take some time...",
+      });
+      utils.studio.getOne.invalidate();
+    },
+    onError: () => {
+      toast.error("Couldn't restore thumbnail.");
+    },
+  });
+
+  const generateDescription = trpc.videos.generateDescription.useMutation({
+    onSuccess: () => {
+      toast.success("Generating video description", {
+        description: "This may take some time...",
+      });
+      utils.studio.getOne.invalidate();
+    },
+    onError: () => {
+      toast.error("Couldn't restore thumbnail.");
+    },
+  });
+
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     resolver: zodResolver(videoUpdateSchema),
     defaultValues: {
@@ -243,7 +273,32 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>
+                      <div className="flex items-center gap-x-2">
+                        Title
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                className="rounded-sm [&_svg]:size-3.5 -ml-1 bg-transparent p-1"
+                                onClick={() =>
+                                  generateTitle.mutate({ videoId })
+                                }
+                                disabled={generateTitle.isPending}
+                              >
+                                {generateTitle.isPending ? (
+                                  <Loader className="animate-spin transition size-4" />
+                                ) : (
+                                  <Sparkles />
+                                )}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>Generate Title</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -259,7 +314,34 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>
+                      <div className="flex items-center gap-x-2">
+                        Description
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                className="rounded-sm [&_svg]:size-3.5 -ml-1 bg-transparent p-1"
+                                onClick={() =>
+                                  generateDescription.mutate({ videoId })
+                                }
+                                disabled={generateDescription.isPending}
+                              >
+                                {generateDescription.isPending ? (
+                                  <Loader className="animate-spin transition size-4" />
+                                ) : (
+                                  <Sparkles />
+                                )}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Generate Description
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
