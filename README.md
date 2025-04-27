@@ -172,6 +172,13 @@ Why background jobs?
 - Trigger a background job✅
 - Add AI using vercel SDK✅
 - Add background jobs✅
+
   - Generate title✅
-  - Generate description
-  - Generate thumbnail
+  - Generate description✅
+  - Generate thumbnail✅
+
+  ## AI Thumbnails
+
+  - Create thumbnail prompt modal
+  - Create thumbail generation workflow
+  - Add Skeleton to form-section loading state✅

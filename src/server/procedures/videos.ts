@@ -1,5 +1,5 @@
+import { thumbnailSchema, videoUpdateSchema } from "@/schemas/index";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { videoUpdateSchema } from "@/schemas/index";
 import { UTApi } from "uploadthing/server";
 import { workflow } from "@/lib/workflow";
 import { TRPCError } from "@trpc/server";
@@ -34,6 +34,28 @@ export const videosRouter = createTRPCRouter({
       const {} = await workflow.trigger({
         url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/description`,
         body: { userId, videoId: input.videoId },
+      });
+    }),
+  generateThumbnail: protectedProcedure
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+        prompt: z.string().min(10),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const validatedFields = thumbnailSchema.safeParse({
+        prompt: input.prompt,
+      });
+
+      if (!validatedFields.success)
+        throw new TRPCError({ code: "BAD_REQUEST" });
+
+      const {} = await workflow.trigger({
+        url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/thumbnail`,
+        body: { userId, videoId: input.videoId, prompt: input.prompt },
       });
     }),
   restore: protectedProcedure

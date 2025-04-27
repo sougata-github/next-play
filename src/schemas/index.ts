@@ -13,3 +13,7 @@ export const videoUpdateSchema = z.object({
   visibility: VisibilityEnum.default("PRIVATE"),
   categoryId: z.string().nullable().optional(),
 });
+
+export const thumbnailSchema = z.object({
+  prompt: z.string().min(10),
+});

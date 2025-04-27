@@ -58,6 +58,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import ThumbnailGenerateModal from "../ThumbnailGenerateModal";
 
 interface Props {
   videoId: string;
@@ -131,6 +132,8 @@ const FormSectionSekeleton = () => {
 
 const FormSectionSuspense = ({ videoId }: Props) => {
   const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false);
+  const [thumbnailGenerateModalOpen, setThumbnailGenerateModalOpen] =
+    useState(false);
 
   const router = useRouter();
   const [isCopied, setIsCopied] = useState(false);
@@ -182,7 +185,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
       utils.studio.getOne.invalidate();
     },
     onError: () => {
-      toast.error("Couldn't restore thumbnail.");
+      toast.error("Couldn't generate title.");
     },
   });
 
@@ -194,7 +197,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
       utils.studio.getOne.invalidate();
     },
     onError: () => {
-      toast.error("Couldn't restore thumbnail.");
+      toast.error("Couldn't generate title.");
     },
   });
 
@@ -231,6 +234,11 @@ const FormSectionSuspense = ({ videoId }: Props) => {
         open={thumbnailModalOpen}
         onOpenChange={setThumbnailModalOpen}
         videoId={videoId}
+      />
+      <ThumbnailGenerateModal
+        videoId={videoId}
+        open={thumbnailGenerateModalOpen}
+        onOpenChange={setThumbnailGenerateModalOpen}
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -382,7 +390,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                             <Button
                               type="button"
                               size="icon"
-                              className="bg-black/50 hover:bg-black/50 transition absolute top-1 right-1 rounded-full opacity-100 group-hover:opacity-100 md:opacity-0"
+                              className="bg-transparent hover:bg-transparent rounded-sm transition absolute top-1 right-1 opacity-100 group-hover:opacity-100 md:opacity-0"
                             >
                               <MoreVerticalIcon />
                             </Button>
@@ -394,7 +402,11 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                               <ImagePlusIcon className="size-4 mr-1" />
                               Change
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                setThumbnailGenerateModalOpen(true)
+                              }
+                            >
                               <Sparkles className="size-4 mr-1" />
                               Ai Generated
                             </DropdownMenuItem>
