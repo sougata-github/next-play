@@ -179,6 +179,15 @@ Why background jobs?
 
   ## AI Thumbnails
 
-  - Create thumbnail prompt modal
-  - Create thumbail generation workflow
+  - Create thumbnail prompt modal✅
+  - Create thumbail generation workflow✅
   - Add Skeleton to form-section loading state✅
+
+  ## Video Page
+
+  - Create video "getOne" procedure✅
+    - inner-join "user" (author information)
+  - Prefetching process✅
+  - Video section✅
+  - Comments section (Placeholder)✅
+  - Suggestions section (Placeholder)✅

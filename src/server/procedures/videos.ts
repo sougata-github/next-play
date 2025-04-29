@@ -8,6 +8,27 @@ import { db } from "@/db";
 import { z } from "zod";
 
 export const videosRouter = createTRPCRouter({
+  getOne: protectedProcedure
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+      })
+    )
+    .query(async ({ input }) => {
+      const existingVideo = await db.video.findUnique({
+        where: {
+          id: input.videoId,
+        },
+        //inner join
+        include: {
+          user: true,
+        },
+      });
+
+      if (!existingVideo) throw new TRPCError({ code: "BAD_REQUEST" });
+
+      return existingVideo;
+    }),
   generateTitle: protectedProcedure
     .input(
       z.object({
