@@ -1,4 +1,5 @@
 import { categoriesRouter } from "@/server/procedures/categories";
+import { videoViewsRouter } from "@/server/procedures/views";
 import { videosRouter } from "@/server/procedures/videos";
 import { studioRouter } from "@/server/procedures/studio";
 
@@ -8,6 +9,7 @@ export const appRouter = createTRPCRouter({
   categories: categoriesRouter,
   studio: studioRouter,
   videos: videosRouter,
+  videoViews: videoViewsRouter,
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

@@ -22,6 +22,12 @@ export const videosRouter = createTRPCRouter({
         //inner join
         include: {
           user: true,
+          //only returns the count of that entity
+          _count: {
+            select: {
+              views: true,
+            },
+          },
         },
       });
 

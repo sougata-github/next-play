@@ -7,13 +7,32 @@ import { ErrorBoundary } from "react-error-boundary";
 import VideoPlayer from "../VideoPlayer";
 import VideoBanner from "../VideoBanner";
 import VideoTopRow from "../VideoTopRow";
+import { useAuth } from "@clerk/nextjs";
 
 interface Props {
   videoId: string;
 }
 
 const VideoSectionSuspense = ({ videoId }: Props) => {
+  const { isSignedIn } = useAuth();
+  const utils = trpc.useUtils();
+
   const [video] = trpc.videos.getOne.useSuspenseQuery({ videoId });
+
+  const createView = trpc.videoViews.create.useMutation({
+    onSuccess: () => {
+      utils.videos.getOne.invalidate();
+    },
+    onError: () => {
+      console.log("Couldn't create a view");
+    },
+  });
+
+  const handlePlay = () => {
+    if (!isSignedIn) return;
+
+    createView.mutate({ videoId });
+  };
 
   return (
     <>
@@ -25,7 +44,7 @@ const VideoSectionSuspense = ({ videoId }: Props) => {
       >
         <VideoPlayer
           autoPlay
-          onPlay={() => {}}
+          onPlay={handlePlay}
           playbackId={video.muxPlaybackId!}
           thumbnailUrl={video.thumbnailUrl}
         />

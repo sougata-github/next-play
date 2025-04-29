@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime @updatedAt
  
   videos Video[]
+  views View[]
  } 
 
 model Category {
@@ -66,4 +67,21 @@ model Video {
   
   categoryId String?
   category Category? @relation(fields: [categoryId], references: [id])
+  
+  views View[]
+}
+
+model View {
+  id String @id @default(uuid())
+
+  userId String 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  videoId String 
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId,videoId])
 }
