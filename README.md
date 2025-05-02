@@ -201,7 +201,7 @@ Why background jobs?
 
   ## Video reactions
 
-  - Create video reactions schema
-  - Combine video reactions for "getOne" videos procedure
-  - Create video reactions like & dislike procedure
-  - Connect VideoReactions component with new API
+  - Create video reactions schema✅
+  - Combine video reactions for "getOne" videos procedure✅
+  - Create video reactions like & dislike procedure✅
+  - Connect VideoReactions component with new API✅
