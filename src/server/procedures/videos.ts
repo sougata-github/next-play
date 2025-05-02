@@ -18,26 +18,66 @@ export const videosRouter = createTRPCRouter({
         videoId: z.string().uuid(),
       })
     )
-    .query(async ({ input }) => {
-      const existingVideo = await db.video.findUnique({
-        where: {
-          id: input.videoId,
-        },
-        //inner join
-        include: {
-          user: true,
-          //only returns the count of that entity
-          _count: {
-            select: {
-              views: true,
+    .query(async ({ ctx, input }) => {
+      const { clerkUserId } = ctx;
+
+      let userId: string | undefined = undefined;
+
+      if (clerkUserId) {
+        const user = await db.user.findUnique({
+          where: {
+            clerkId: clerkUserId,
+          },
+        });
+
+        userId = user?.id;
+      }
+
+      const viewerReactions = userId
+        ? await db.reaction.findFirst({
+            where: {
+              userId,
+              videoId: input.videoId,
+            },
+          })
+        : null;
+
+      const [likeCount, dislikeCount, existingVideo] = await Promise.all([
+        db.reaction.count({
+          where: {
+            videoId: input.videoId,
+            type: "LIKE",
+          },
+        }),
+        db.reaction.count({
+          where: {
+            videoId: input.videoId,
+            type: "DISLIKE",
+          },
+        }),
+        db.video.findUnique({
+          where: {
+            id: input.videoId,
+          },
+          include: {
+            user: true,
+            _count: {
+              select: {
+                views: true,
+              },
+            },
+            reactions: {
+              select: {
+                type: true,
+              },
             },
           },
-        },
-      });
+        }),
+      ]);
 
       if (!existingVideo) throw new TRPCError({ code: "BAD_REQUEST" });
 
-      return existingVideo;
+      return { existingVideo, viewerReactions, likeCount, dislikeCount };
     }),
   generateTitle: protectedProcedure
     .input(

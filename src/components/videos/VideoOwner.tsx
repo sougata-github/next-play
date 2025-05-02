@@ -8,8 +8,8 @@ import UserAvatar from "../UserAvatar";
 import { Button } from "../ui/button";
 
 interface Props {
-  user: VideoGetOneOutput["user"];
-  videoId: VideoGetOneOutput["id"];
+  user: VideoGetOneOutput["existingVideo"]["user"];
+  videoId: VideoGetOneOutput["existingVideo"]["id"];
 }
 
 const VideoOwner = ({ user, videoId }: Props) => {

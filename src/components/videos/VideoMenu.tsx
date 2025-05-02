@@ -16,7 +16,7 @@ import {
 import { Button } from "../ui/button";
 
 interface Props {
-  videoId: VideoGetOneOutput["id"];
+  videoId: VideoGetOneOutput["existingVideo"]["id"];
   variant?: "ghost" | "secondary";
   onRemove?: () => void;
 }

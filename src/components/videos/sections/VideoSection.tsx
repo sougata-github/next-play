@@ -34,22 +34,24 @@ const VideoSectionSuspense = ({ videoId }: Props) => {
     createView.mutate({ videoId });
   };
 
+  const existingVideo = video.existingVideo;
+
   return (
     <>
       <div
         className={cn(
           "aspect-video bg-black overflow-hidden relative rounded-xl",
-          video.muxStatus !== "ready" && "rounded-b-none"
+          existingVideo.muxStatus !== "ready" && "rounded-b-none"
         )}
       >
         <VideoPlayer
           autoPlay
           onPlay={handlePlay}
-          playbackId={video.muxPlaybackId!}
-          thumbnailUrl={video.thumbnailUrl}
+          playbackId={existingVideo.muxPlaybackId!}
+          thumbnailUrl={existingVideo.thumbnailUrl}
         />
       </div>
-      <VideoBanner status={video.muxStatus} />
+      <VideoBanner status={existingVideo.muxStatus} />
       <VideoTopRow video={video} />
     </>
   );

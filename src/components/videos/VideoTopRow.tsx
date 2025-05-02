@@ -12,34 +12,41 @@ interface Props {
 }
 
 const VideoTopRow = ({ video }: Props) => {
+  const { existingVideo } = video;
+
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",
-    }).format(video._count.views);
-  }, [video._count.views]);
+    }).format(existingVideo._count.views);
+  }, [existingVideo._count.views]);
 
   const expandedViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "standard",
-    }).format(video._count.views);
-  }, [video._count.views]);
+    }).format(existingVideo._count.views);
+  }, [existingVideo._count.views]);
 
   const compactDate = useMemo(() => {
-    return formatDistanceToNow(video.createdAt, { addSuffix: true });
-  }, [video.createdAt]);
+    return formatDistanceToNow(existingVideo.createdAt, { addSuffix: true });
+  }, [existingVideo.createdAt]);
 
   const expandedDate = useMemo(() => {
-    return format(video.createdAt, "d MMM yyyy");
-  }, [video.createdAt]);
+    return format(existingVideo.createdAt, "d MMM yyyy");
+  }, [existingVideo.createdAt]);
 
   return (
     <div className="flex flex-col gap-4 mt-4">
-      <h1 className="text-xl font-semibold">{video.title}</h1>
+      <h1 className="text-xl font-semibold">{existingVideo.title}</h1>
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <VideoOwner user={video.user} videoId={video.id} />
+        <VideoOwner user={existingVideo.user} videoId={existingVideo.id} />
         <div className="flex overflow-x-auto sm:min-w-[calc(50%-6px)] sm:justify-end sm:overflow-visible pb-2 -mb-2 sm:pb-0 sm:m-0 gap-2">
-          <VideoReactions />
-          <VideoMenu videoId={video.id} variant="secondary" />
+          <VideoReactions
+            videoId={existingVideo.id}
+            likes={video.likeCount}
+            dislikes={video.dislikeCount}
+            viewerReactions={video.viewerReactions}
+          />
+          <VideoMenu videoId={existingVideo.id} variant="secondary" />
         </div>
       </div>
       <VideoDescription
@@ -47,7 +54,7 @@ const VideoTopRow = ({ video }: Props) => {
         expandedViews={expandedViews}
         compactDate={compactDate}
         expandedDate={expandedDate}
-        description={video.description}
+        description={existingVideo.description}
       />
     </div>
   );
