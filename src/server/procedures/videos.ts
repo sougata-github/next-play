@@ -1,5 +1,9 @@
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
 import { thumbnailSchema, videoUpdateSchema } from "@/schemas/index";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { UTApi } from "uploadthing/server";
 import { workflow } from "@/lib/workflow";
 import { TRPCError } from "@trpc/server";
@@ -8,7 +12,7 @@ import { db } from "@/db";
 import { z } from "zod";
 
 export const videosRouter = createTRPCRouter({
-  getOne: protectedProcedure
+  getOne: baseProcedure
     .input(
       z.object({
         videoId: z.string().uuid(),
