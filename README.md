@@ -198,3 +198,10 @@ Why background jobs?
   - Combine video views for "getOne" videos procedure✅
   - Create video views creation procedure✅
   - Trigger video view creation on video play✅
+
+  ## Video reactions
+
+  - Create video reactions schema
+  - Combine video reactions for "getOne" videos procedure
+  - Create video reactions like & dislike procedure
+  - Connect VideoReactions component with new API

@@ -15,8 +15,8 @@ export const videoViewsRouter = createTRPCRouter({
 
       const existingVideoView = await db.view.findFirst({
         where: {
-          videoId,
           userId,
+          videoId,
         },
       });
 

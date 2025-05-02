@@ -1,5 +1,11 @@
 generator client {
   provider = "prisma-client-js"
+  output = "../src/generated/client"
+
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
 }
 
 datasource db {
@@ -18,6 +24,7 @@ model User {
  
   videos Video[]
   views View[]
+  reactions Reaction[]
  } 
 
 model Category {
@@ -69,6 +76,7 @@ model Video {
   category Category? @relation(fields: [categoryId], references: [id])
   
   views View[]
+  reactions Reaction[]
 }
 
 model View {
@@ -83,5 +91,27 @@ model View {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId,videoId])
+  @@unique([userId,videoId], name: "userId_videoId")
+}
+
+enum ReactionType {
+  LIKE
+  DISLIKE
+}
+
+model Reaction {
+  id String @id @default(uuid())
+
+  type ReactionType 
+
+  userId String 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  videoId String 
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId,videoId], name: "userId_videoId")
 }
