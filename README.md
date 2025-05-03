@@ -205,3 +205,9 @@ Why background jobs?
   - Combine video reactions for "getOne" videos procedure✅
   - Create video reactions like & dislike procedure✅
   - Connect VideoReactions component with new API✅
+
+  ## Subscriptions
+
+  - Create subscriptions schema
+  - Combine subscriptions for "getOne" videos procedure
+  - Create SubscriptionButton component with new API

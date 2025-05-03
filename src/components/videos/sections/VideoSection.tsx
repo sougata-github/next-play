@@ -34,7 +34,7 @@ const VideoSectionSuspense = ({ videoId }: Props) => {
     createView.mutate({ videoId });
   };
 
-  const existingVideo = video.existingVideo;
+  const { existingVideo } = video;
 
   return (
     <>

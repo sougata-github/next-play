@@ -12,7 +12,7 @@ interface Props {
 }
 
 const VideoTopRow = ({ video }: Props) => {
-  const { existingVideo } = video;
+  const { existingVideo, subscriberCount, isSubscribed } = video;
 
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
@@ -38,7 +38,12 @@ const VideoTopRow = ({ video }: Props) => {
     <div className="flex flex-col gap-4 mt-4">
       <h1 className="text-xl font-semibold">{existingVideo.title}</h1>
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <VideoOwner user={existingVideo.user} videoId={existingVideo.id} />
+        <VideoOwner
+          isSubscribed={isSubscribed}
+          subscriberCount={subscriberCount}
+          user={existingVideo.user}
+          videoId={existingVideo.id}
+        />
         <div className="flex overflow-x-auto sm:min-w-[calc(50%-6px)] sm:justify-end sm:overflow-visible pb-2 -mb-2 sm:pb-0 sm:m-0 gap-2">
           <VideoReactions
             videoId={existingVideo.id}
@@ -50,6 +55,7 @@ const VideoTopRow = ({ video }: Props) => {
         </div>
       </div>
       <VideoDescription
+        views={existingVideo._count.views}
         compactViews={compactViews}
         expandedViews={expandedViews}
         compactDate={compactDate}

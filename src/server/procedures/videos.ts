@@ -77,7 +77,31 @@ export const videosRouter = createTRPCRouter({
 
       if (!existingVideo) throw new TRPCError({ code: "BAD_REQUEST" });
 
-      return { existingVideo, viewerReactions, likeCount, dislikeCount };
+      const isSubscribed = userId
+        ? await db.subscription
+            .findFirst({
+              where: {
+                viewerId: userId,
+                creatorId: existingVideo.user.id,
+              },
+            })
+            .then(Boolean)
+        : false;
+
+      const subscriberCount = await db.subscription.count({
+        where: {
+          creatorId: existingVideo.userId,
+        },
+      });
+
+      return {
+        existingVideo,
+        viewerReactions,
+        likeCount,
+        dislikeCount,
+        subscriberCount,
+        isSubscribed,
+      };
     }),
   generateTitle: protectedProcedure
     .input(

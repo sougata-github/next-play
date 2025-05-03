@@ -16,7 +16,9 @@ const Navbar = () => {
           <Link href="/studio">
             <div className="p-4 flex items-center gap-2">
               <Image src="/logo.svg" height={40} width={40} alt="logo" />
-              <p className="text-xl font-semibold tracking-tight">Studio</p>
+              <p className="text-xl font-semibold tracking-tight max-sm:hidden">
+                Studio
+              </p>
             </div>
           </Link>
         </div>

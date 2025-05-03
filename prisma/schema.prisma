@@ -25,7 +25,10 @@ model User {
   videos Video[]
   views View[]
   reactions Reaction[]
- } 
+
+  subscriptions Subscription[] @relation("UserSubscriptions")
+  subscribers Subscription[] @relation("UserSubscribers")
+} 
 
 model Category {
   id String @id @default(uuid())
@@ -114,4 +117,19 @@ model Reaction {
   updatedAt DateTime @updatedAt
 
   @@unique([userId,videoId], name: "userId_videoId")
+}
+
+model Subscription{
+  id String @id @default(uuid())
+
+  viewerId String
+  viewer User @relation("UserSubscriptions", fields: [viewerId], references: [id], onDelete: Cascade)
+
+  creatorId String
+  creator User @relation("UserSubscribers",fields: [creatorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+   @@unique([viewerId, creatorId], name: "viewerId_creatorId")
 }

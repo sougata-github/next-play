@@ -1,4 +1,6 @@
+import { useSubscription } from "@/hooks/useSubscription";
 import { VideoGetOneOutput } from "@/types";
+import { displayCount } from "@/lib/utils";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 
@@ -8,12 +10,25 @@ import UserAvatar from "../UserAvatar";
 import { Button } from "../ui/button";
 
 interface Props {
+  isSubscribed: VideoGetOneOutput["isSubscribed"];
+  subscriberCount: VideoGetOneOutput["subscriberCount"];
   user: VideoGetOneOutput["existingVideo"]["user"];
   videoId: VideoGetOneOutput["existingVideo"]["id"];
 }
 
-const VideoOwner = ({ user, videoId }: Props) => {
+const VideoOwner = ({
+  isSubscribed,
+  subscriberCount,
+  user,
+  videoId,
+}: Props) => {
   const { userId } = useAuth();
+
+  const { isPending, onClick } = useSubscription({
+    userId: user.id,
+    isSubscribed,
+    fromVideoId: videoId,
+  });
 
   return (
     <div className="flex items-center sm:items-start justify-between sm:justify-start gap-3 min-w-0">
@@ -23,7 +38,7 @@ const VideoOwner = ({ user, videoId }: Props) => {
           <div className="flex flex-col gap-1 min-w-0">
             <UserInfo size="lg" name={user.name} />
             <span className="text-sm text-muted-foreground line-clamp-1">
-              {0} subscribers
+              {subscriberCount} {displayCount(subscriberCount, "subscriber")}
             </span>
           </div>
         </div>
@@ -34,9 +49,9 @@ const VideoOwner = ({ user, videoId }: Props) => {
         </Button>
       ) : (
         <SubscriptionButton
-          onClick={() => {}}
-          disabled={false}
-          isSubscribed={false}
+          onClick={onClick}
+          disabled={isPending}
+          isSubscribed={isSubscribed}
           className="flex-none"
         />
       )}

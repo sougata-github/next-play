@@ -1,8 +1,10 @@
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { cn, displayCount } from "@/lib/utils";
+import { VideoGetOneOutput } from "@/types";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 interface Props {
+  views: VideoGetOneOutput["existingVideo"]["_count"]["views"];
   compactViews: string;
   expandedViews: string;
   compactDate: string;
@@ -11,6 +13,7 @@ interface Props {
 }
 
 const VideoDescription = ({
+  views,
   compactViews,
   expandedViews,
   compactDate,
@@ -26,7 +29,8 @@ const VideoDescription = ({
     >
       <div className="flex gap-2 text-sm mb-2">
         <span className="font-medium">
-          {isExpanded ? expandedViews : compactViews} views
+          {isExpanded ? expandedViews : compactViews}{" "}
+          {displayCount(views, "view")}
         </span>
         <span className="font-medium">
           {isExpanded ? expandedDate : compactDate}
