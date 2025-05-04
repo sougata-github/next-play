@@ -3,6 +3,8 @@ import { cn, displayCount } from "@/lib/utils";
 import { VideoGetOneOutput } from "@/types";
 import { useState } from "react";
 
+import { Skeleton } from "../ui/skeleton";
+
 interface Props {
   views: VideoGetOneOutput["existingVideo"]["_count"]["views"];
   compactViews: string;
@@ -11,6 +13,10 @@ interface Props {
   expandedDate: string;
   description?: string | null;
 }
+
+export const VideoDescriptionSkeleton = () => {
+  return <Skeleton className="-mt-28 rounded-xl h-20 w-full" />;
+};
 
 const VideoDescription = ({
   views,

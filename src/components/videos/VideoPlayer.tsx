@@ -2,21 +2,25 @@
 
 import { THUMBNAIL_FALLBACK } from "@/constants";
 import MuxPlayer from "@mux/mux-player-react";
+import { Skeleton } from "../ui/skeleton";
 
 interface Props {
   playbackId?: string | undefined;
   thumbnailUrl?: string | null | undefined;
-  autoPlay?: boolean;
   onPlay?: () => void;
 }
 
-const VideoPlayer = ({ playbackId, thumbnailUrl, autoPlay, onPlay }: Props) => {
+export const VideoPlayerSkeleton = () => {
+  return <Skeleton className="aspect-video rounded-xl" />;
+};
+
+const VideoPlayer = ({ playbackId, thumbnailUrl, onPlay }: Props) => {
   return (
     <MuxPlayer
       playbackId={playbackId || ""}
       poster={thumbnailUrl || THUMBNAIL_FALLBACK}
       playerInitTime={0}
-      autoPlay={autoPlay}
+      autoPlay={false}
       thumbnailTime={0}
       onPlay={onPlay}
       className="w-full h-full object-contain"

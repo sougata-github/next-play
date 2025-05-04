@@ -177,37 +177,44 @@ Why background jobs?
   - Generate description✅
   - Generate thumbnail✅
 
-  ## AI Thumbnails
+## AI Thumbnails
 
-  - Create thumbnail prompt modal✅
-  - Create thumbail generation workflow✅
-  - Add Skeleton to form-section loading state✅
+- Create thumbnail prompt modal✅
+- Create thumbail generation workflow✅
+- Add Skeleton to form-section loading state✅
 
-  ## Video Page
+## Video Page
 
-  - Create video "getOne" procedure✅
-    - inner-join "user" (author information)
-  - Prefetching process✅
-  - Video section✅
-  - Comments section (Placeholder)✅
-  - Suggestions section (Placeholder)✅
+- Create video "getOne" procedure✅
+  - inner-join "user" (author information)
+- Prefetching process✅
+- Video section✅
+- Comments section (Placeholder)✅
+- Suggestions section (Placeholder)✅
 
-  ## Video Views
+## Video Views
 
-  - Create video views schema✅
-  - Combine video views for "getOne" videos procedure✅
-  - Create video views creation procedure✅
-  - Trigger video view creation on video play✅
+- Create video views schema✅
+- Combine video views for "getOne" videos procedure✅
+- Create video views creation procedure✅
+- Trigger video view creation on video play✅
 
-  ## Video reactions
+## Video reactions
 
-  - Create video reactions schema✅
-  - Combine video reactions for "getOne" videos procedure✅
-  - Create video reactions like & dislike procedure✅
-  - Connect VideoReactions component with new API✅
+- Create video reactions schema✅
+- Combine video reactions for "getOne" videos procedure✅
+- Create video reactions like & dislike procedure✅
+- Connect VideoReactions component with new API✅
 
-  ## Subscriptions
+## Subscriptions
 
-  - Create subscriptions schema
-  - Combine subscriptions for "getOne" videos procedure
-  - Create SubscriptionButton component with new API
+- Create subscriptions schema✅
+- Combine subscriptions for "getOne" videos procedure✅
+- Create subscriptions procedures✅
+- Create SubscriptionButton component with new API✅
+
+## Comments
+
+- Create comments schema
+- Create comments procedures
+- Create comments section

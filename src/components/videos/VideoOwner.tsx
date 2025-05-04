@@ -22,7 +22,7 @@ const VideoOwner = ({
   user,
   videoId,
 }: Props) => {
-  const { userId } = useAuth();
+  const { userId, isLoaded } = useAuth();
 
   const { isPending, onClick } = useSubscription({
     userId: user.id,
@@ -50,7 +50,7 @@ const VideoOwner = ({
       ) : (
         <SubscriptionButton
           onClick={onClick}
-          disabled={isPending}
+          disabled={isPending || !isLoaded}
           isSubscribed={isSubscribed}
           className="flex-none"
         />

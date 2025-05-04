@@ -4,14 +4,25 @@ import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import VideoPlayer from "../VideoPlayer";
+import VideoPlayer, { VideoPlayerSkeleton } from "../VideoPlayer";
 import VideoBanner from "../VideoBanner";
-import VideoTopRow from "../VideoTopRow";
+import VideoTopRow, { VideoTopRowSkeleton } from "../VideoTopRow";
 import { useAuth } from "@clerk/nextjs";
+import { VideoDescriptionSkeleton } from "../VideoDescription";
 
 interface Props {
   videoId: string;
 }
+
+export const VideoSectionSekeleton = () => {
+  return (
+    <>
+      <VideoPlayerSkeleton />
+      <VideoTopRowSkeleton />
+      <VideoDescriptionSkeleton />
+    </>
+  );
+};
 
 const VideoSectionSuspense = ({ videoId }: Props) => {
   const { isSignedIn } = useAuth();
@@ -45,7 +56,6 @@ const VideoSectionSuspense = ({ videoId }: Props) => {
         )}
       >
         <VideoPlayer
-          autoPlay
           onPlay={handlePlay}
           playbackId={existingVideo.muxPlaybackId!}
           thumbnailUrl={existingVideo.thumbnailUrl}
@@ -59,7 +69,7 @@ const VideoSectionSuspense = ({ videoId }: Props) => {
 
 const VideoSection = ({ videoId }: Props) => {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<VideoSectionSekeleton />}>
       <ErrorBoundary fallback={<p>Error</p>}>
         <VideoSectionSuspense videoId={videoId} />
       </ErrorBoundary>
