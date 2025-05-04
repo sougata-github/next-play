@@ -17,3 +17,7 @@ export const videoUpdateSchema = z.object({
 export const thumbnailSchema = z.object({
   prompt: z.string().min(10),
 });
+
+export const commentsSchema = z.object({
+  content: z.string().min(2),
+});

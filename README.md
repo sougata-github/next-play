@@ -215,6 +215,6 @@ Why background jobs?
 
 ## Comments
 
-- Create comments schema
-- Create comments procedures
-- Create comments section
+- Create comments schema✅
+- Create comments procedures✅
+- Create comments section✅
