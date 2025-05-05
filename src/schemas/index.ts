@@ -19,5 +19,7 @@ export const thumbnailSchema = z.object({
 });
 
 export const commentsSchema = z.object({
-  content: z.string().min(2),
+  content: z.string().min(2, {
+    message: "Comment must be at least 2 characters long.",
+  }),
 });

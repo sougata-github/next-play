@@ -2,11 +2,11 @@ import "./globals.css";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCProvider } from "@/trpc/client";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin"],
 });
 
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
-        <body className={`${inter.className} antialiased`}>
+        <body className={`${geist.className} antialiased`}>
           <TRPCProvider>
             <Toaster />
             {children}

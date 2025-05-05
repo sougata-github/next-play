@@ -218,3 +218,10 @@ Why background jobs?
 - Create comments schema✅
 - Create comments procedures✅
 - Create comments section✅
+
+## Comments Infinite Loading
+
+- Modify comments "getMany" procedure✅
+- Change prefect() to prefecthInfinte()✅
+- Change suspense() to useSuspenseInfiniteQuery()✅
+- Add InfiniteLoading component✅

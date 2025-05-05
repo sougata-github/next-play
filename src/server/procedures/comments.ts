@@ -35,24 +35,91 @@ export const commentsRouter = createTRPCRouter({
 
       return comment;
     }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const { id } = input;
+
+      const deletedComment = await db.comment.delete({
+        where: {
+          id,
+          userId,
+        },
+      });
+
+      if (!deletedComment) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return deletedComment;
+    }),
   getMany: baseProcedure
     .input(
       z.object({
         videoId: z.string().uuid(),
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(),
+        limit: z.number().min(1).max(100),
       })
     )
     .query(async ({ input }) => {
-      const { videoId } = input;
+      const { videoId, cursor, limit } = input;
 
-      const comments = await db.comment.findMany({
+      const totalComments = await db.comment.count({
         where: {
           videoId,
         },
+      });
+
+      const data = await db.comment.findMany({
+        where: {
+          videoId,
+          ...(cursor && {
+            OR: [
+              {
+                updatedAt: {
+                  lt: cursor.updatedAt,
+                },
+              },
+              {
+                updatedAt: cursor.updatedAt,
+                id: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
         include: {
           user: true,
         },
+        take: limit + 1,
       });
 
-      return comments;
+      const hasMore = data.length > limit;
+
+      const comments = hasMore ? data.slice(0, -1) : data;
+
+      const lastComment = comments[comments.length - 1];
+
+      const nextCursor = hasMore
+        ? {
+            id: lastComment.id,
+            updatedAt: lastComment.updatedAt,
+          }
+        : null;
+
+      return { comments, nextCursor, totalComments };
     }),
 });
