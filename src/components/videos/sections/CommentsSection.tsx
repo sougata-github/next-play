@@ -4,6 +4,7 @@ import CommentForm from "@/components/comments/CommentForm";
 import CommentItem from "@/components/comments/CommentItem";
 import InfiniteScroll from "@/components/InfiniteScroll";
 import { DEFAULT_LIMIT } from "@/constants";
+import { displayCount } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { Loader } from "lucide-react";
 import { Suspense } from "react";
@@ -37,7 +38,9 @@ const CommentsSectionSuspense = ({ videoId }: Props) => {
   return (
     <div className="mt-6 ">
       <div className="flex flex-col gap-6">
-        <h1 className="text-lg font-semibold">{totalComments} Comments</h1>
+        <h1 className="text-lg font-semibold">
+          {totalComments} {displayCount(totalComments, "Comment")}
+        </h1>
         <CommentForm videoId={videoId} />
         <div className="flex flex-col gap-4 mt-2">
           {comments.pages.flatMap((page) =>

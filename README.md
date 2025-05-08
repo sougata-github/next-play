@@ -225,3 +225,9 @@ Why background jobs?
 - Change prefect() to prefecthInfinte()✅
 - Change suspense() to useSuspenseInfiniteQuery()✅
 - Add InfiniteLoading component✅
+
+## Comment reactions
+
+- Add "commentReactions" schema✅
+- Create comment reactions UI✅
+- Combine "commentReactions" with comments "getMany" procedure✅

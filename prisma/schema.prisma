@@ -30,6 +30,7 @@ model User {
   subscribers Subscription[] @relation("UserSubscribers")
 
   comments Comment[]
+  commentReactions CommentReaction[]
 } 
 
 model Category {
@@ -150,4 +151,28 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  reactions CommentReaction[]
+}
+
+enum CommentReactionType {
+  LIKE
+  DISLIKE
+}
+
+model CommentReaction {
+  id String @id @default(uuid())
+
+  type CommentReactionType
+    
+  commentId String
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([commentId, userId], name: "commentId_userId")
 }

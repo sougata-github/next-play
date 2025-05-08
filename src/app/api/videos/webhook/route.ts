@@ -92,6 +92,21 @@ export async function POST(req: Request) {
 
       console.log("Updating video to ready status...");
 
+      //updating mux status
+      if (existingVideo.muxStatus !== "ready") {
+        await db.video.update({
+          where: {
+            muxUploadId: data.upload_id,
+          },
+          data: {
+            muxStatus: data.status,
+            muxPlaybackId: playbackId,
+            muxAssetId: data.id,
+            duration,
+          },
+        });
+      }
+
       //upload to uploadthing when no existing key
       if (!existingVideo.thumbnailKey && !existingVideo.previewKey) {
         const utapi = new UTApi();
