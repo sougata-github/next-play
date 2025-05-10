@@ -19,5 +19,9 @@ export const snakeCaseToTitle = (str: string) => {
 };
 
 export const displayCount = (count: number, display: string): string => {
-  return count > 1 || count === 0 ? display + "s" : display;
+  return count > 1 || count === 0
+    ? display.endsWith("y")
+      ? display.slice(0, -1) + "ies"
+      : display + "s"
+    : display;
 };

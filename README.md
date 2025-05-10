@@ -226,8 +226,17 @@ Why background jobs?
 - Change suspense() to useSuspenseInfiniteQuery()✅
 - Add InfiniteLoading component✅
 
-## Comment reactions
+## Comment Reactions
 
 - Add "commentReactions" schema✅
 - Create comment reactions UI✅
 - Combine "commentReactions" with comments "getMany" procedure✅
+
+## Comment Replies
+
+- Extend comment schema by adding "parentId" foreign key✅
+- Create UI for replies
+- Modify comments "getMany" procedure by combining parentId
+- Create variants for "CommentItem" component
+- Create variants for "CommentForm" component
+- Create CommentReplies component

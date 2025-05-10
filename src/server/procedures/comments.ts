@@ -12,6 +12,7 @@ export const commentsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
+        parentId: z.string().uuid().nullish(),
         videoId: z.string().uuid(),
         content: z.string(),
       })
@@ -19,7 +20,25 @@ export const commentsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id: userId } = ctx.user;
 
-      const { videoId, content } = input;
+      const { parentId, videoId, content } = input;
+
+      if (parentId) {
+        const existingComment = await db.comment.findFirst({
+          where: {
+            id: parentId,
+          },
+        });
+
+        //check whether comment to reply exists or not
+        if (!existingComment && parentId) {
+          throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
+        //prevent reply on a reply
+        if (existingComment?.parentId && parentId) {
+          throw new TRPCError({ code: "BAD_REQUEST" });
+        }
+      }
 
       const validateFields = commentsSchema.safeParse({ content });
 
@@ -28,6 +47,7 @@ export const commentsRouter = createTRPCRouter({
       const comment = await db.comment.create({
         data: {
           userId,
+          parentId,
           videoId,
           content,
         },
@@ -62,6 +82,7 @@ export const commentsRouter = createTRPCRouter({
   getMany: baseProcedure
     .input(
       z.object({
+        parentId: z.string().uuid().nullish(),
         videoId: z.string().uuid(),
         cursor: z
           .object({
@@ -73,7 +94,7 @@ export const commentsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const { videoId, cursor, limit } = input;
+      const { parentId, videoId, cursor, limit } = input;
 
       const { clerkUserId } = ctx;
 
@@ -92,12 +113,14 @@ export const commentsRouter = createTRPCRouter({
       const totalComments = await db.comment.count({
         where: {
           videoId,
+          parentId: null,
         },
       });
 
       const data = await db.comment.findMany({
         where: {
           videoId,
+          parentId: parentId ? parentId : null,
           ...(cursor && {
             OR: [
               {
@@ -117,6 +140,12 @@ export const commentsRouter = createTRPCRouter({
         orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
         include: {
           user: true,
+          _count: {
+            select: {
+              replies: true,
+            },
+          },
+          replies: true,
         },
         take: limit + 1,
       });

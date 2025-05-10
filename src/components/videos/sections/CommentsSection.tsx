@@ -3,10 +3,10 @@
 import CommentForm from "@/components/comments/CommentForm";
 import CommentItem from "@/components/comments/CommentItem";
 import InfiniteScroll from "@/components/InfiniteScroll";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DEFAULT_LIMIT } from "@/constants";
 import { displayCount } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
-import { Loader } from "lucide-react";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -16,8 +16,8 @@ interface Props {
 
 export const CommentsSkeleton = () => {
   return (
-    <div className="mt-6 flex items-center justify-center">
-      <Loader className="size-4 animate-spin transition" />
+    <div className="mt-6 flex">
+      <Skeleton className="h-8 rounded-lg" />
     </div>
   );
 };
@@ -33,6 +33,7 @@ const CommentsSectionSuspense = ({ videoId }: Props) => {
     }
   );
 
+  //static for every page
   const totalComments = comments.pages[0].totalComments;
 
   return (
