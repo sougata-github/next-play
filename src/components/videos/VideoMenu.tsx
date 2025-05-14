@@ -21,7 +21,7 @@ interface Props {
   onRemove?: () => void;
 }
 
-const VideoMenu = ({ videoId, variant, onRemove }: Props) => {
+const VideoMenu = ({ videoId, variant = "ghost", onRemove }: Props) => {
   const onShare = () => {
     const fullUrl = `${
       process.env.VERCEL_URL || "http://localhost:3000"

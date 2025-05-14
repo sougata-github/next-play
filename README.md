@@ -235,8 +235,15 @@ Why background jobs?
 ## Comment Replies
 
 - Extend comment schema by adding "parentId" foreign key✅
-- Create UI for replies
-- Modify comments "getMany" procedure by combining parentId
-- Create variants for "CommentItem" component
-- Create variants for "CommentForm" component
-- Create CommentReplies component
+- Create UI for replies✅
+- Modify comments "getMany" procedure by combining parentId✅
+- Create variants for "CommentItem" component✅
+- Create variants for "CommentForm" component✅
+- Create CommentReplies component✅
+
+## Suggestions
+
+- Create suggestions procedure
+- Prefetch suggestions
+- Create VideoRowCard and VideoGrid components
+- Connect Suggestions section with new API

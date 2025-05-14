@@ -1,4 +1,4 @@
-import SuggestionsSections from "../sections/SuggestionsSections";
+import SuggestionsSection from "../sections/SuggestionsSection";
 import CommentsSection from "../sections/CommentsSection";
 import VideoSection from "../sections/VideoSection";
 
@@ -13,12 +13,12 @@ const VideoView = ({ videoId }: Props) => {
         <div className="flex-1 min-w-0">
           <VideoSection videoId={videoId} />
           <div className="xl:hidden block mt-4">
-            <SuggestionsSections />
+            <SuggestionsSection videoId={videoId} isManual={true} />
           </div>
           <CommentsSection videoId={videoId} />
         </div>
         <div className="hidden xl:block w-full xl:w-[380px] 2xl:w-[460px] shrink-1">
-          <SuggestionsSections />
+          <SuggestionsSection videoId={videoId} />
         </div>
       </div>
     </div>
