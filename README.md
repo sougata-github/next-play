@@ -243,7 +243,17 @@ Why background jobs?
 
 ## Suggestions
 
-- Create suggestions procedure
-- Prefetch suggestions
-- Create VideoRowCard and VideoGrid components
-- Connect Suggestions section with new API
+- Create suggestions procedure✅
+- Prefetch suggestions✅
+- Create VideoRowCard and VideoGrid components✅
+- Connect Suggestions section with new API✅
+
+## Search Page
+
+- Add manual video re-validation✅
+  - in case webhook fail
+  - in case webhooks fire out of order
+- Add proper categoryId query to suggestions
+- Create search procedure
+- Prefecth searcg page
+- Connect search section to API

@@ -33,9 +33,10 @@ export const suggestionsRouter = createTRPCRouter({
           ...(exisitingVideo.categoryId && {
             categoryId: exisitingVideo.categoryId,
           }),
-          // NOT: {
-          //   id: exisitingVideo.id,
-          // },
+          NOT: {
+            id: exisitingVideo.id,
+          },
+          visibility: "PUBLIC",
           ...(cursor && {
             OR: [
               {
