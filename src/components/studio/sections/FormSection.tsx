@@ -168,7 +168,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
 
   const revalidate = trpc.videos.revalidate.useMutation({
     onSuccess: () => {
-      toast.success("Video revalidate");
+      toast.success("Video revalidated");
       utils.studio.getOne.invalidate();
       utils.studio.getMany.invalidate();
     },
@@ -268,7 +268,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                   <span>Save</span>
                 )}
               </Button>
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" type="button">
                     <MoreVerticalIcon />

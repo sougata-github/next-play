@@ -171,6 +171,34 @@ export const videosRouter = createTRPCRouter({
 
       if (!existingVideo) throw new TRPCError({ code: "NOT_FOUND" });
 
+      console.log("uploadthing cleanup...");
+
+      //uploadthing cleanup
+      if (existingVideo.thumbnailKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(existingVideo.thumbnailKey);
+      }
+
+      if (existingVideo.previewKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(existingVideo.previewKey);
+      }
+
+      console.log("Cleanup successfull.");
+
+      await db.video.update({
+        where: {
+          id: input.videoId,
+          userId,
+        },
+        data: {
+          thumbnailKey: null,
+          thumbnailUrl: null,
+          previewKey: null,
+          previewUrl: null,
+        },
+      });
+
       if (!existingVideo.muxUploadId)
         throw new TRPCError({ code: "BAD_REQUEST" });
 
@@ -188,6 +216,29 @@ export const videosRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
 
+      const playbackId = asset.playback_ids?.[0].id;
+
+      //upload to uploadthing
+      const tempThumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
+      const tempPreviewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
+
+      console.log("Uploading to uploadthing...");
+
+      const utapi = new UTApi();
+      const [uploadedThumbnail, uploadedPreview] =
+        await utapi.uploadFilesFromUrl([tempThumbnailUrl, tempPreviewUrl]);
+
+      if (!uploadedThumbnail.data || !uploadedPreview.data) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+
+      const { key: thumbnailKey, ufsUrl: thumbnailUrl } =
+        uploadedThumbnail.data;
+
+      const { key: previewKey, ufsUrl: previewUrl } = uploadedPreview.data;
+
+      console.log("Uploaded to uploadthing.");
+
       const duration = asset.duration ? Math.round(asset.duration * 1000) : 0;
 
       const updatedVideo = await db.video.update({
@@ -199,9 +250,15 @@ export const videosRouter = createTRPCRouter({
           muxStatus: asset.status,
           muxPlaybackId: asset.playback_ids?.[0].id,
           muxAssetId: asset.id,
+          thumbnailKey,
+          thumbnailUrl,
+          previewKey,
+          previewUrl,
           duration,
         },
       });
+
+      console.log("Video revalidated");
 
       return updatedVideo;
     }),
@@ -224,7 +281,7 @@ export const videosRouter = createTRPCRouter({
       if (!existingVideo) throw new TRPCError({ code: "NOT_FOUND" });
 
       //file cleanup before restoring thumbnail
-      if (existingVideo.thumbnailKey) {
+      if (existingVideo.thumbnailKey && existingVideo.previewKey) {
         const utapi = new UTApi();
 
         await utapi.deleteFiles(existingVideo.thumbnailKey);
