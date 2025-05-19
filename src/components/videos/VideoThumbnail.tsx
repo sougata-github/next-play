@@ -19,7 +19,7 @@ export const VideoThumbnailSkeleton = () => {
   );
 };
 
-const VideoThumbnail = ({ title, imageUrl, previewUrl, duration }: Props) => {
+const VideoThumbnail = ({ title, imageUrl, duration }: Props) => {
   return (
     <div className="relative group">
       <div className="relative w-full overflow-hidden rounded-lg aspect-video">
@@ -27,14 +27,7 @@ const VideoThumbnail = ({ title, imageUrl, previewUrl, duration }: Props) => {
           src={imageUrl || THUMBNAIL_FALLBACK}
           alt={title}
           fill
-          className="h-full w-full object-cover group-hover:opacity-0 transition-all"
-        />
-        <Image
-          unoptimized={!!previewUrl}
-          src={previewUrl || THUMBNAIL_FALLBACK}
-          alt={title}
-          fill
-          className="h-full w-full object-cover group-hover:opacity-100 opacity-0 transition-all"
+          className="h-full w-full object-cover transition-all"
         />
       </div>
 

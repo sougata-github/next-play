@@ -253,7 +253,7 @@ Why background jobs?
 - Add manual video re-validation✅
   - in case webhook fail
   - in case webhooks fire out of order
-- Add proper categoryId query to suggestions
-- Create search procedure
-- Prefecth searcg page
-- Connect search section to API
+- Add proper categoryId query to suggestions✅
+- Create search procedure✅
+- Prefecth searcg page✅
+- Connect search section to API✅

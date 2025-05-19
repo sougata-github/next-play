@@ -5,6 +5,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { VideoGetOneOutput } from "@/types";
+import { APP_URL } from "@/constants";
 import { toast } from "sonner";
 
 import {
@@ -24,7 +25,7 @@ interface Props {
 const VideoMenu = ({ videoId, variant = "ghost", onRemove }: Props) => {
   const onShare = () => {
     const fullUrl = `${
-      process.env.VERCEL_URL || "http://localhost:3000"
+      APP_URL ? `https://${APP_URL}` : "http://localhost:3000"
     }/videos/${videoId}`;
 
     navigator.clipboard.writeText(fullUrl);

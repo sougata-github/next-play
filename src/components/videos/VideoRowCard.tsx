@@ -80,7 +80,7 @@ export const VideoRowCardSkeleton = ({
   );
 };
 
-const VideoRowCard = ({ data, size, onRemove }: Props) => {
+const VideoRowCard = ({ data, size = "default", onRemove }: Props) => {
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",

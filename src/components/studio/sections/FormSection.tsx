@@ -50,7 +50,7 @@ import { snakeCaseToTitle } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import { THUMBNAIL_FALLBACK } from "@/constants";
+import { APP_URL, THUMBNAIL_FALLBACK } from "@/constants";
 import ThumbnailUploadModal from "@/components/ThumbnailUploadModal";
 import {
   Tooltip,
@@ -228,7 +228,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
   };
 
   const fullUrl = `${
-    process.env.VERCEL_URL || "http://localhost:3000"
+    APP_URL ? `https://${APP_URL}` : "http://localhost:3000"
   }/videos/${videoId}`;
 
   const onCopy = () => {

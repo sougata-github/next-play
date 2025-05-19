@@ -9,3 +9,6 @@ export type VideoGetManyOutput =
 
 export type CommentsGetManyOutput =
   inferRouterOutputs<AppRouter>["comments"]["getMany"];
+
+export type SearchGetManyOutput =
+  inferRouterOutputs<AppRouter>["search"]["getMany"];
