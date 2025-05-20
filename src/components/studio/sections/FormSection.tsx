@@ -227,9 +227,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
     update.mutate({ data, videoId });
   };
 
-  const fullUrl = `${
-    APP_URL ? `https://${APP_URL}` : "http://localhost:3000"
-  }/videos/${videoId}`;
+  const fullUrl = `${APP_URL}/videos/${videoId}`;
 
   const onCopy = () => {
     navigator.clipboard.writeText(fullUrl);

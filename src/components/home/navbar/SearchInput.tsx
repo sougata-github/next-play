@@ -4,24 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { APP_URL } from "@/constants";
 import { SearchIcon, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const SearchInput = () => {
-  const [value, setValue] = useState("");
+  const searchParams = useSearchParams();
+  const [value, setValue] = useState(searchParams.get("query") || "");
   const router = useRouter();
+
+  const categoryId = searchParams.get("categoryId") || "";
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const url = new URL(
-      "/search",
-      APP_URL ? `https://${APP_URL}` : "http://localhost:3000"
-    );
+    const url = new URL("/search", APP_URL);
 
     const newQuery = value.trim();
 
     url.searchParams.set("query", encodeURIComponent(newQuery));
+
+    if (categoryId) {
+      url.searchParams.set("categoryId", categoryId);
+    }
 
     if (newQuery === "") {
       url.searchParams.delete("query");
@@ -43,7 +47,7 @@ const SearchInput = () => {
           onChange={(e) => setValue(e.target.value)}
           type="text"
           placeholder="Search"
-          className="w-full py-2 outline-none border-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-2 focus-visible:ring-2 focus-visible:ring-red-500 focus:ring-red-500 pl-4 h-full rounded-l-full"
+          className="w-full py-2 outline-none border-none shadow-none focus:outline-none focus-visible:outline-none focus:ring-2 focus-visible:ring-2 focus-visible:ring-ring focus:ring-ring pl-4 h-full rounded-l-full"
         />
         {value && (
           <Button
@@ -53,7 +57,7 @@ const SearchInput = () => {
             onClick={() => {
               setValue("");
             }}
-            className="z-20 bg-background absolute rounded-none right-2 top-1/2 -translate-y-1/2 hover:bg-transparent"
+            className="z-20 absolute rounded-none right-2 top-1/2 -translate-y-1/2 hover:bg-transparent bg-transparent"
           >
             <X />
           </Button>

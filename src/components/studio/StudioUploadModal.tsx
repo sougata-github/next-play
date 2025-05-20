@@ -44,7 +44,6 @@ const StudioUploadModal = () => {
         )}
       </ResponsiveModal>
       <Button
-        variant="secondary"
         onClick={() => create.mutate()}
         disabled={create.isPending}
         className="w-[92px]"
