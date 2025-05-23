@@ -30,8 +30,8 @@ const VideoInfo = ({ data, onRemove }: Props) => {
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",
-    }).format(data._count.views);
-  }, [data._count.views]);
+    }).format(data.viewCount);
+  }, [data.viewCount]);
 
   const compactDate = useMemo(() => {
     return formatDistanceToNow(data.createdAt, {
@@ -55,7 +55,7 @@ const VideoInfo = ({ data, onRemove }: Props) => {
         </Link>
         <Link href={`/videos/${data.id}`}>
           <p className="text-sm text-gray-600 line-clamp-1">
-            {compactViews} {displayCount(data._count.views, "view")} •{" "}
+            {compactViews} {displayCount(data.viewCount, "view")} •{" "}
             {compactDate}{" "}
           </p>
         </Link>

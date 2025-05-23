@@ -36,17 +36,19 @@ export const VideoTopRowSkeleton = () => {
 const VideoTopRow = ({ video }: Props) => {
   const { existingVideo, subscriberCount, isSubscribed } = video;
 
+  console.log(existingVideo.viewCount);
+
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",
-    }).format(existingVideo._count.views);
-  }, [existingVideo._count.views]);
+    }).format(existingVideo.viewCount);
+  }, [existingVideo.viewCount]);
 
   const expandedViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "standard",
-    }).format(existingVideo._count.views);
-  }, [existingVideo._count.views]);
+    }).format(existingVideo.viewCount);
+  }, [existingVideo.viewCount]);
 
   const compactDate = useMemo(() => {
     return formatDistanceToNow(existingVideo.createdAt, { addSuffix: true });
@@ -77,7 +79,7 @@ const VideoTopRow = ({ video }: Props) => {
         </div>
       </div>
       <VideoDescription
-        views={existingVideo._count.views}
+        views={existingVideo.viewCount}
         compactViews={compactViews}
         expandedViews={expandedViews}
         compactDate={compactDate}

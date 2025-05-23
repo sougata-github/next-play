@@ -8,19 +8,20 @@ interface Props {
   playbackId?: string | undefined;
   thumbnailUrl?: string | null | undefined;
   onPlay?: () => void;
+  autoPlay: boolean;
 }
 
 export const VideoPlayerSkeleton = () => {
   return <Skeleton className="aspect-video rounded-xl" />;
 };
 
-const VideoPlayer = ({ playbackId, thumbnailUrl, onPlay }: Props) => {
+const VideoPlayer = ({ playbackId, thumbnailUrl, onPlay, autoPlay }: Props) => {
   return (
     <MuxPlayer
+      autoPlay={autoPlay}
       playbackId={playbackId || ""}
       poster={thumbnailUrl || THUMBNAIL_FALLBACK}
       playerInitTime={0}
-      autoPlay={false}
       thumbnailTime={0}
       onPlay={onPlay}
       className="w-full h-full object-contain"

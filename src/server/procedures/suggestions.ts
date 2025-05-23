@@ -56,11 +56,6 @@ export const suggestionsRouter = createTRPCRouter({
         orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
         take: limit + 1, // add one to check if more data exists
         include: {
-          _count: {
-            select: {
-              views: true,
-            },
-          },
           user: true,
         },
       });

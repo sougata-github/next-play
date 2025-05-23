@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 
 interface Props {
-  views: VideoGetOneOutput["existingVideo"]["_count"]["views"];
+  views: VideoGetOneOutput["existingVideo"]["viewCount"];
   compactViews: string;
   expandedViews: string;
   compactDate: string;

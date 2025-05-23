@@ -55,6 +55,7 @@ model Video {
   id String @id @default(uuid())
   title String 
   description String?
+  viewCount Int @default(0)
   
   thumbnailUrl String?
   thumbnailKey String?
@@ -63,7 +64,7 @@ model Video {
   previewKey String?
 
   duration Int @default(0)
-  visibility Visibility @default(PRIVATE)
+  visibility Visibility @default(PUBLIC)
   
   muxStatus String
   muxAssetId String? @unique

@@ -257,3 +257,10 @@ Why background jobs?
 - Create search procedure✅
 - Prefecth searcg page✅
 - Connect search section to API✅
+
+## Home Feed
+
+- Create videos procedures✅
+- Add Home page✅
+- Add Trending page✅
+- Add Subscriptions page✅

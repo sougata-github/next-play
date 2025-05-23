@@ -12,6 +12,271 @@ import { db } from "@/db";
 import { z } from "zod";
 
 export const videosRouter = createTRPCRouter({
+  getManySubscribed: protectedProcedure
+    .input(
+      z.object({
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(), //not required for first request
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input;
+      const { id: userId } = ctx.user;
+
+      const viewerSubscriptions = await db.subscription.findMany({
+        where: {
+          viewerId: userId,
+        },
+        select: {
+          creatorId: true,
+        },
+      });
+
+      const subscribedCreatorIds = viewerSubscriptions.map(
+        (sub) => sub.creatorId
+      );
+
+      const data = await db.video.findMany({
+        where: {
+          //creators to whom the logged in user has subscribed
+          userId: {
+            in: subscribedCreatorIds,
+          },
+          visibility: "PUBLIC",
+          ...(cursor && {
+            OR: [
+              {
+                updatedAt: {
+                  lt: cursor.updatedAt,
+                },
+              },
+              {
+                updatedAt: cursor.updatedAt,
+                id: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        take: limit + 1, // add one to check if more data exists
+        include: {
+          user: true,
+        },
+      });
+
+      const hasMore = data.length > limit;
+
+      //remove last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      const videosWithReactions = await Promise.all(
+        items.map(async (video) => {
+          const [likeCount, dislikeCount] = await Promise.all([
+            db.reaction.count({
+              where: {
+                videoId: video.id,
+                type: "LIKE",
+              },
+            }),
+            db.reaction.count({
+              where: {
+                videoId: video.id,
+                type: "DISLIKE",
+              },
+            }),
+          ]);
+
+          return { ...video, likeCount, dislikeCount };
+        })
+      );
+
+      //update cursor
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            updatedAt: lastItem.updatedAt,
+          }
+        : null;
+
+      return {
+        videosWithReactions,
+        nextCursor,
+      };
+    }),
+  getManyTrending: baseProcedure
+    .input(
+      z.object({
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            viewCount: z.number(),
+          })
+          .nullish(), //not required for first request
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ input }) => {
+      const { cursor, limit } = input;
+
+      const data = await db.video.findMany({
+        where: {
+          visibility: "PUBLIC",
+          ...(cursor && {
+            OR: [
+              {
+                viewCount: {
+                  lt: cursor.viewCount,
+                },
+              },
+              {
+                viewCount: cursor.viewCount,
+                id: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+        orderBy: [{ viewCount: "desc" }, { id: "desc" }],
+        take: limit + 1, // add one to check if more data exists
+        include: {
+          user: true,
+        },
+      });
+
+      const hasMore = data.length > limit;
+
+      //remove last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      const videosWithReactions = await Promise.all(
+        items.map(async (video) => {
+          const [likeCount, dislikeCount] = await Promise.all([
+            db.reaction.count({
+              where: {
+                videoId: video.id,
+                type: "LIKE",
+              },
+            }),
+            db.reaction.count({
+              where: {
+                videoId: video.id,
+                type: "DISLIKE",
+              },
+            }),
+          ]);
+
+          return { ...video, likeCount, dislikeCount };
+        })
+      );
+
+      //update cursor
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            viewCount: lastItem.viewCount,
+          }
+        : null;
+
+      return {
+        videosWithReactions,
+        nextCursor,
+      };
+    }),
+  getMany: baseProcedure
+    .input(
+      z.object({
+        categoryId: z.string().uuid().nullish(),
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(), //not required for first request
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ input }) => {
+      const { cursor, limit, categoryId } = input;
+
+      const data = await db.video.findMany({
+        where: {
+          visibility: "PUBLIC",
+          ...(categoryId && {
+            categoryId,
+          }),
+          ...(cursor && {
+            OR: [
+              {
+                updatedAt: {
+                  lt: cursor.updatedAt,
+                },
+              },
+              {
+                updatedAt: cursor.updatedAt,
+                id: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        take: limit + 1, // add one to check if more data exists
+        include: {
+          user: true,
+        },
+      });
+
+      const hasMore = data.length > limit;
+
+      //remove last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      const videosWithReactions = await Promise.all(
+        items.map(async (video) => {
+          const [likeCount, dislikeCount] = await Promise.all([
+            db.reaction.count({
+              where: {
+                videoId: video.id,
+                type: "LIKE",
+              },
+            }),
+            db.reaction.count({
+              where: {
+                videoId: video.id,
+                type: "DISLIKE",
+              },
+            }),
+          ]);
+
+          return { ...video, likeCount, dislikeCount };
+        })
+      );
+
+      //update cursor
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            updatedAt: lastItem.updatedAt,
+          }
+        : null;
+
+      return {
+        videosWithReactions,
+        nextCursor,
+      };
+    }),
   getOne: baseProcedure
     .input(
       z.object({
@@ -61,11 +326,6 @@ export const videosRouter = createTRPCRouter({
           },
           include: {
             user: true,
-            _count: {
-              select: {
-                views: true,
-              },
-            },
             reactions: {
               select: {
                 type: true,

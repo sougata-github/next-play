@@ -19,6 +19,7 @@ export function useSubscription({ userId, isSubscribed, fromVideoId }: Props) {
       toast.success("Subscribed");
       if (fromVideoId) {
         utils.videos.getOne.invalidate({ videoId: fromVideoId });
+        utils.videos.getManySubscribed.invalidate();
       }
     },
     onError: (error) => {

@@ -39,6 +39,7 @@ export const searchRouter = createTRPCRouter({
 
       const data = await db.video.findMany({
         where: {
+          visibility: "PUBLIC",
           OR: [
             {
               title: {
@@ -82,11 +83,6 @@ export const searchRouter = createTRPCRouter({
         orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
         take: limit + 1, // add one to check if more data exists
         include: {
-          _count: {
-            select: {
-              views: true,
-            },
-          },
           user: true,
         },
       });

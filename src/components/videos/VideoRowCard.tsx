@@ -84,8 +84,8 @@ const VideoRowCard = ({ data, size = "default", onRemove }: Props) => {
   const compactViews = useMemo(() => {
     return Intl.NumberFormat("en", {
       notation: "compact",
-    }).format(data._count.views);
-  }, [data._count.views]);
+    }).format(data.viewCount);
+  }, [data.viewCount]);
 
   const compactLikes = useMemo(() => {
     return Intl.NumberFormat("en", {
@@ -117,7 +117,7 @@ const VideoRowCard = ({ data, size = "default", onRemove }: Props) => {
             </h3>
             {size === "default" && (
               <p className="text-xs text-muted-foreground mt-1">
-                {compactViews} {displayCount(data._count.views, "view")} •{" "}
+                {compactViews} {displayCount(data.viewCount, "view")} •{" "}
                 {compactLikes} {displayCount(data.likeCount, "like")}
               </p>
             )}
@@ -150,7 +150,7 @@ const VideoRowCard = ({ data, size = "default", onRemove }: Props) => {
             {size === "compact" && <UserInfo size="sm" name={data.user.name} />}
             {size === "compact" && (
               <p className="text-xs text-muted-foreground mt-1">
-                {compactViews} {displayCount(data._count.views, "view")} •{" "}
+                {compactViews} {displayCount(data.viewCount, "view")} •{" "}
                 {compactLikes} {displayCount(data.likeCount, "like")}
               </p>
             )}

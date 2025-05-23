@@ -32,6 +32,17 @@ export const videoViewsRouter = createTRPCRouter({
         },
       });
 
+      //increment viewCount for that video
+
+      await db.video.update({
+        where: {
+          id: videoId,
+        },
+        data: {
+          viewCount: { increment: 1 },
+        },
+      });
+
       return createdVideoView;
     }),
 });
