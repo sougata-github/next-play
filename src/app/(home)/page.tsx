@@ -10,7 +10,7 @@ interface Props {
   }>;
 }
 
-export default async function HomePage({ searchParams }: Props) {
+export default async function VideosPage({ searchParams }: Props) {
   const { categoryId } = await searchParams;
 
   void trpc.categories.getMany.prefetch();

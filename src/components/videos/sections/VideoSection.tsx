@@ -33,6 +33,7 @@ const VideoSectionSuspense = ({ videoId }: Props) => {
   const createView = trpc.videoViews.create.useMutation({
     onSuccess: () => {
       utils.videos.getOne.invalidate();
+      utils.playlists.getManyHistory.invalidate();
     },
     onError: () => {
       console.log("Couldn't create a view");

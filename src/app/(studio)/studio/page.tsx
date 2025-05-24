@@ -4,7 +4,7 @@ import { DEFAULT_LIMIT } from "@/constants";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page() {
+export default async function StudioPage() {
   void trpc.studio.getMany.prefetchInfinite({
     limit: DEFAULT_LIMIT,
   });

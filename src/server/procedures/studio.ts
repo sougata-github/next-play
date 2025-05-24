@@ -65,12 +65,32 @@ export const studioRouter = createTRPCRouter({
         },
         orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
         take: limit + 1, // add one to check if more data exists
+        include: {
+          _count: {
+            select: {
+              comments: true,
+              views: true,
+            },
+          },
+        },
       });
 
       const hasMore = data.length > limit;
 
       //remove last item if there is more data
       const items = hasMore ? data.slice(0, -1) : data;
+
+      const videosWithLikeCount = await Promise.all(
+        items.map(async (video) => {
+          const likeCount = await db.reaction.count({
+            where: {
+              videoId: video.id,
+              type: "LIKE",
+            },
+          });
+          return { ...video, likeCount };
+        })
+      );
 
       //update cursor
       const lastItem = items[items.length - 1];
@@ -82,7 +102,7 @@ export const studioRouter = createTRPCRouter({
         : null;
 
       return {
-        items,
+        videosWithLikeCount,
         nextCursor,
       };
     }),

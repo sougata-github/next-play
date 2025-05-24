@@ -4,7 +4,7 @@ import { DEFAULT_LIMIT } from "@/constants";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function SubscriptionsPage() {
   void trpc.videos.getManySubscribed.prefetchInfinite({
     limit: DEFAULT_LIMIT,
   });

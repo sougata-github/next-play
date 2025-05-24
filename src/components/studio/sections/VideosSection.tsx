@@ -96,14 +96,14 @@ const VideosSectionSuspense = () => {
               <TableHead>Visibility</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="">Date</TableHead>
-              <TableHead className="text-right">Views</TableHead>
-              <TableHead className="text-right">Comments</TableHead>
-              <TableHead className="text-right pr-6">Likes</TableHead>
+              <TableHead className="text-center">Views</TableHead>
+              <TableHead className="text-center">Comments</TableHead>
+              <TableHead className="text-center pr-6">Likes</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {videos.pages
-              .flatMap((page) => page.items)
+              .flatMap((page) => page.videosWithLikeCount)
               .map((video) => (
                 <Link
                   href={`/studio/videos/${video.id}`}
@@ -150,9 +150,15 @@ const VideosSectionSuspense = () => {
                     <TableCell className="text-sm truncate">
                       {format(new Date(video.createdAt), "d MMM yyyy")}
                     </TableCell>
-                    <TableCell className="text-right">views</TableCell>
-                    <TableCell className="text-right">comments</TableCell>
-                    <TableCell className="text-right pr-6">Likes</TableCell>
+                    <TableCell className="text-center">
+                      {video._count.views}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {video._count.comments}
+                    </TableCell>
+                    <TableCell className="text-center pr-6">
+                      {video.likeCount}
+                    </TableCell>
                   </TableRow>
                 </Link>
               ))}

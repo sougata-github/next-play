@@ -264,3 +264,8 @@ Why background jobs?
 - Add Home page✅
 - Add Trending page✅
 - Add Subscriptions page✅
+
+## Playlists
+
+- Create playlists procedures
+- Create History & Liked videos page
