@@ -12,3 +12,6 @@ export type CommentsGetManyOutput =
 
 export type SearchGetManyOutput =
   inferRouterOutputs<AppRouter>["search"]["getMany"];
+
+export type PlaylistsGetManyOutput =
+  inferRouterOutputs<AppRouter>["playlists"]["getMany"];

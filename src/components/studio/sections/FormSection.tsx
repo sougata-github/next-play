@@ -473,6 +473,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
               <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden h-fit">
                 <div>
                   <VideoPlayer
+                    autoPlay={false}
                     playbackId={
                       video.muxPlaybackId ? video.muxPlaybackId : undefined
                     }

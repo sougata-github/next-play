@@ -23,3 +23,7 @@ export const commentsSchema = z.object({
     message: "Comment must be at least 2 characters long.",
   }),
 });
+
+export const playlistSchema = z.object({
+  name: z.string().min(1),
+});

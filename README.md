@@ -255,7 +255,7 @@ Why background jobs?
   - in case webhooks fire out of order
 - Add proper categoryId query to suggestions✅
 - Create search procedure✅
-- Prefecth searcg page✅
+- Prefetch search page✅
 - Connect search section to API✅
 
 ## Home Feed
@@ -267,5 +267,11 @@ Why background jobs?
 
 ## Playlists
 
-- Create playlists procedures
-- Create History & Liked videos page
+- Create playlists procedures✅
+- Create History & Liked videos page✅
+
+## Custom Playlists
+
+- Create custom playlists schema✅
+- Create custom playlists procedures✅
+- Create playlists page✅
