@@ -63,7 +63,7 @@ const TrendingVideosSectionSuspense = () => {
           </div>
         ) : (
           <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
-            No results found
+            No videos yet
           </p>
         )
       ) : results.pages[0].videosWithReactions.length > 0 ? (
@@ -84,7 +84,7 @@ const TrendingVideosSectionSuspense = () => {
         </div>
       ) : (
         <p className="m-4 text-muted-foreground/40 text-center text-lg font-medium">
-          No results found
+          No videos yet
         </p>
       )}
     </>
