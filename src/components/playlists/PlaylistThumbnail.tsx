@@ -10,8 +10,8 @@ import { Skeleton } from "../ui/skeleton";
 interface Props {
   imageUrl?: string | null;
   className?: string;
-  title: PlaylistsGetManyOutput["data"][number]["name"];
-  videoCount: PlaylistsGetManyOutput["data"][number]["_count"]["videos"];
+  title: PlaylistsGetManyOutput["playlistsWithThumbnail"][number]["name"];
+  videoCount: PlaylistsGetManyOutput["playlistsWithThumbnail"][number]["_count"]["videos"];
 }
 
 export const PlaylistThumbnailSkeleton = () => {

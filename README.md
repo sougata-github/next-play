@@ -275,3 +275,9 @@ Why background jobs?
 - Create custom playlists schema✅
 - Create custom playlists procedures✅
 - Create playlists page✅
+
+## Populate Playlists
+
+- Create PlaylistAddModal component
+- Create "getManyForVideo" playlist procedure
+- Create add and remove procedures for playlists

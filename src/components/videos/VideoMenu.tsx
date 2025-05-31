@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ListPlusIcon,
   MoreVerticalIcon,
@@ -6,6 +8,7 @@ import {
 } from "lucide-react";
 import { VideoGetOneOutput } from "@/types";
 import { APP_URL } from "@/constants";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -14,7 +17,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import PlaylistAddModal from "../playlists/PlaylistAddModal";
 import { Button } from "../ui/button";
+import { useAuth } from "@clerk/nextjs";
 
 interface Props {
   videoId: VideoGetOneOutput["existingVideo"]["id"];
@@ -23,6 +28,10 @@ interface Props {
 }
 
 const VideoMenu = ({ videoId, variant = "ghost", onRemove }: Props) => {
+  const { isSignedIn } = useAuth();
+
+  const [openPlaylistModal, setOpenPlaylistModal] = useState(false);
+
   const onShare = () => {
     const fullUrl = `${APP_URL}/videos/${videoId}`;
 
@@ -31,29 +40,38 @@ const VideoMenu = ({ videoId, variant = "ghost", onRemove }: Props) => {
   };
 
   return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button variant={variant} size="icon" className="rounded-full">
-          <MoreVerticalIcon />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-        <DropdownMenuItem onClick={onShare}>
-          <ShareIcon className="mr-2 size-4" />
-          Share
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => {}}>
-          <ListPlusIcon className="mr-2 size-4" />
-          Add to Playlist
-        </DropdownMenuItem>
-        {onRemove && (
-          <DropdownMenuItem onClick={() => {}}>
-            <Trash2Icon className="mr-2 size-4" />
-            Remove
+    <>
+      <PlaylistAddModal
+        videoId={videoId}
+        open={openPlaylistModal}
+        onOpenChange={setOpenPlaylistModal}
+      />
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button variant={variant} size="icon" className="rounded-full">
+            <MoreVerticalIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+          <DropdownMenuItem onClick={onShare}>
+            <ShareIcon className="mr-2 size-4" />
+            Share
           </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          {isSignedIn && (
+            <DropdownMenuItem onClick={() => setOpenPlaylistModal(true)}>
+              <ListPlusIcon className="mr-2 size-4" />
+              Add to Playlist
+            </DropdownMenuItem>
+          )}
+          {isSignedIn && onRemove && (
+            <DropdownMenuItem onClick={() => {}}>
+              <Trash2Icon className="mr-2 size-4" />
+              Remove
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 

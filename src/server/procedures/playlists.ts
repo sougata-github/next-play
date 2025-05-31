@@ -4,6 +4,198 @@ import { db } from "@/db";
 import { z } from "zod";
 
 export const playlistsRouter = createTRPCRouter({
+  addVideo: protectedProcedure
+    .input(
+      z.object({
+        playlistId: z.string().uuid(),
+        videoId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const { videoId, playlistId } = input;
+
+      const existingPlaylist = await db.playlist.findUnique({
+        where: {
+          id: playlistId,
+        },
+      });
+
+      if (!existingPlaylist) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (existingPlaylist.userId !== userId)
+        throw new TRPCError({ code: "FORBIDDEN" });
+
+      const existingVideo = await db.video.findUnique({
+        where: {
+          id: videoId,
+        },
+      });
+
+      if (!existingVideo) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const existingPlaylistVideo = await db.playlistVideo.findUnique({
+        where: {
+          playlistId_videoId: {
+            playlistId,
+            videoId,
+          },
+        },
+      });
+
+      if (existingPlaylistVideo) throw new TRPCError({ code: "CONFLICT" });
+
+      const createdPlaylistVideo = await db.playlistVideo.create({
+        data: {
+          playlistId,
+          videoId,
+        },
+      });
+
+      return createdPlaylistVideo;
+    }),
+  removeVideo: protectedProcedure
+    .input(
+      z.object({
+        playlistId: z.string().uuid(),
+        videoId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const { videoId, playlistId } = input;
+
+      const existingPlaylist = await db.playlist.findUnique({
+        where: {
+          id: playlistId,
+        },
+      });
+
+      if (!existingPlaylist) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (existingPlaylist.userId !== userId)
+        throw new TRPCError({ code: "FORBIDDEN" });
+
+      const existingVideo = await db.video.findUnique({
+        where: {
+          id: videoId,
+        },
+      });
+
+      if (!existingVideo) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const existingPlaylistVideo = await db.playlistVideo.findUnique({
+        where: {
+          playlistId_videoId: {
+            playlistId,
+            videoId,
+          },
+        },
+      });
+
+      if (!existingPlaylistVideo) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const deletedPlaylistVideo = await db.playlistVideo.delete({
+        where: {
+          playlistId_videoId: {
+            playlistId,
+            videoId,
+          },
+        },
+      });
+
+      return deletedPlaylistVideo;
+    }),
+  getManyForVideo: protectedProcedure
+    .input(
+      z.object({
+        videoId: z.string().uuid(),
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(), //not required for first request
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+
+      const { cursor, limit, videoId } = input;
+
+      const data = await db.playlist.findMany({
+        where: {
+          userId,
+          ...(cursor && {
+            OR: [
+              {
+                updatedAt: {
+                  lt: cursor.updatedAt,
+                },
+              },
+              {
+                updatedAt: cursor.updatedAt,
+                id: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+        include: {
+          _count: {
+            select: {
+              videos: true,
+            },
+          },
+          user: true,
+        },
+        //sort by latest view
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        take: limit + 1,
+      });
+
+      const hasMore = data.length > limit;
+
+      //remove last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      const playlistsWithHasVideo = await Promise.all(
+        items.map(async (playlist) => {
+          const hasVideo = videoId
+            ? await db.playlistVideo
+                .findUnique({
+                  where: {
+                    playlistId_videoId: {
+                      playlistId: playlist.id,
+                      videoId,
+                    },
+                  },
+                })
+                .then(Boolean)
+            : false;
+
+          return { ...playlist, hasVideo };
+        })
+      );
+
+      //update cursor
+      const lastPlaylist = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastPlaylist.id,
+            updatedAt: lastPlaylist.updatedAt,
+          }
+        : null;
+
+      return {
+        playlistsWithHasVideo,
+        nextCursor,
+      };
+    }),
   getMany: protectedProcedure
     .input(
       z.object({
@@ -27,12 +219,12 @@ export const playlistsRouter = createTRPCRouter({
           ...(cursor && {
             OR: [
               {
-                createdAt: {
+                updatedAt: {
                   lt: cursor.updatedAt,
                 },
               },
               {
-                createdAt: cursor.updatedAt,
+                updatedAt: cursor.updatedAt,
                 id: {
                   lt: cursor.id,
                 },
@@ -48,8 +240,8 @@ export const playlistsRouter = createTRPCRouter({
           },
           user: true,
         },
-        //sort by latest view
-        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
         take: limit + 1,
       });
 
@@ -57,6 +249,21 @@ export const playlistsRouter = createTRPCRouter({
 
       //remove last item if there is more data
       const items = hasMore ? data.slice(0, -1) : data;
+
+      const playlistsWithThumbnail = await Promise.all(
+        items.map(async (playlist) => {
+          const playlistVideos = await db.playlistVideo.findMany({
+            where: { playlistId: playlist.id },
+            include: { video: true },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          });
+
+          const thumbnailUrl = playlistVideos[0]?.video?.thumbnailUrl ?? null;
+
+          return { ...playlist, thumbnailUrl };
+        })
+      );
 
       //update cursor
       const lastPlaylist = items[items.length - 1];
@@ -68,7 +275,7 @@ export const playlistsRouter = createTRPCRouter({
         : null;
 
       return {
-        data,
+        playlistsWithThumbnail,
         nextCursor,
       };
     }),

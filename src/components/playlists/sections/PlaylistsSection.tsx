@@ -36,7 +36,7 @@ const PlaylistsSectionSuspense = () => {
       }
     );
 
-  if (!results.pages[0].data) {
+  if (!results.pages[0].playlistsWithThumbnail) {
     return (
       <p className="m-4 text-muted-foreground text-center text-lg">
         Start creating some playlists
@@ -47,10 +47,10 @@ const PlaylistsSectionSuspense = () => {
   return (
     <>
       {isMobile ? (
-        results.pages[0].data?.length > 0 ? (
+        results.pages[0].playlistsWithThumbnail?.length > 0 ? (
           <div className="flex flex-col gap-4 gap-y-10">
             {results.pages.flatMap((page) =>
-              page?.data?.map((playlist) => (
+              page?.playlistsWithThumbnail?.map((playlist) => (
                 <PlaylistGridCard playlist={playlist} key={playlist.id} />
               ))
             )}
@@ -66,11 +66,11 @@ const PlaylistsSectionSuspense = () => {
             Start creating some playlists
           </p>
         )
-      ) : results.pages[0].data.length > 0 ? (
+      ) : results.pages[0].playlistsWithThumbnail.length > 0 ? (
         <div>
           <div className="gap-4 gap-y-10 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 [@media(min-width:1920px)]:grid-cols-5 [@media(min-width:2200px)]:grid-cols-6">
             {results.pages.flatMap((page) =>
-              page?.data?.map((playlist) => (
+              page?.playlistsWithThumbnail?.map((playlist) => (
                 <PlaylistGridCard playlist={playlist} key={playlist.id} />
               ))
             )}

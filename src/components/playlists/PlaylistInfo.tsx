@@ -3,7 +3,7 @@ import { PlaylistsGetManyOutput } from "@/types";
 import { Skeleton } from "../ui/skeleton";
 
 interface Props {
-  playlist: PlaylistsGetManyOutput["data"][number];
+  playlist: PlaylistsGetManyOutput["playlistsWithThumbnail"][number];
 }
 
 export const PlaylistInfoSkeleton = () => {
