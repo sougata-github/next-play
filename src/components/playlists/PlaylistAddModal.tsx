@@ -21,10 +21,14 @@ const PlaylistAddModal = ({ videoId, open, onOpenChange }: Props) => {
   const clerk = useClerk();
 
   const addVideo = trpc.playlists.addVideo.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Video added to playlist");
       utils.playlists.getMany.invalidate();
       utils.playlists.getManyForVideo.invalidate();
+      utils.playlists.getOne.invalidate({ playlistId: data.playlistId });
+      utils.playlists.getPlaylistVideos.invalidate({
+        playlistId: data.playlistId,
+      });
     },
     onError: (error) => {
       toast.error("Failed to add ");
@@ -35,10 +39,14 @@ const PlaylistAddModal = ({ videoId, open, onOpenChange }: Props) => {
   });
 
   const removeVideo = trpc.playlists.removeVideo.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Video removed from playlist");
       utils.playlists.getMany.invalidate();
       utils.playlists.getManyForVideo.invalidate();
+      utils.playlists.getOne.invalidate({ playlistId: data.playlistId });
+      utils.playlists.getPlaylistVideos.invalidate({
+        playlistId: data.playlistId,
+      });
     },
     onError: (error) => {
       toast.error("Failed to add ");

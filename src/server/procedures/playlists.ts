@@ -1,9 +1,120 @@
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
 
 export const playlistsRouter = createTRPCRouter({
+  getOne: baseProcedure
+    .input(
+      z.object({
+        playlistId: z.string().uuid(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { playlistId } = input;
+
+      const playlist = await db.playlist.findUnique({
+        where: {
+          id: playlistId,
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      if (!playlist) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return playlist;
+    }),
+  getPlaylistVideos: baseProcedure
+    .input(
+      z.object({
+        cursor: z
+          .object({
+            id: z.string().uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(),
+        limit: z.number().min(1).max(100),
+        playlistId: z.string().uuid(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { cursor, limit, playlistId } = input;
+
+      const data = await db.playlistVideo.findMany({
+        where: {
+          playlistId,
+          ...(cursor && {
+            OR: [
+              {
+                updatedAt: {
+                  lt: cursor.updatedAt,
+                },
+              },
+              {
+                updatedAt: cursor.updatedAt,
+                playlistId: {
+                  lt: cursor.id,
+                },
+              },
+            ],
+          }),
+        },
+
+        orderBy: [{ createdAt: "desc" }, { playlistId: "desc" }],
+        take: limit + 1,
+        include: {
+          video: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      const hasMore = data.length > limit;
+
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      const playlistVideosWithReactions = await Promise.all(
+        items.map(async (playlistVideo) => {
+          const [likeCount, dislikeCount] = await Promise.all([
+            db.reaction.count({
+              where: {
+                videoId: playlistVideo.videoId,
+                type: "LIKE",
+              },
+            }),
+            db.reaction.count({
+              where: {
+                videoId: playlistVideo.videoId,
+                type: "DISLIKE",
+              },
+            }),
+          ]);
+
+          return { ...playlistVideo.video, likeCount, dislikeCount };
+        })
+      );
+
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.playlistId,
+            updatedAt: lastItem.updatedAt,
+          }
+        : null;
+
+      return {
+        playlistVideosWithReactions,
+        nextCursor,
+      };
+    }),
   addVideo: protectedProcedure
     .input(
       z.object({
@@ -278,6 +389,34 @@ export const playlistsRouter = createTRPCRouter({
         playlistsWithThumbnail,
         nextCursor,
       };
+    }),
+  remove: protectedProcedure
+    .input(
+      z.object({
+        playlistId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id: userId } = ctx.user;
+      const { playlistId } = input;
+
+      const existingPlaylist = await db.playlist.findUnique({
+        where: {
+          id: playlistId,
+          userId,
+        },
+      });
+
+      if (!existingPlaylist) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const deletedPlaylist = await db.playlist.delete({
+        where: {
+          id: playlistId,
+          userId,
+        },
+      });
+
+      return deletedPlaylist;
     }),
   create: protectedProcedure
     .input(

@@ -278,6 +278,13 @@ Why background jobs?
 
 ## Populate Playlists
 
-- Create PlaylistAddModal component
-- Create "getManyForVideo" playlist procedure
-- Create add and remove procedures for playlists
+- Create PlaylistAddModal component✅
+- Create "getManyForVideo" playlist procedure✅
+- Create add and remove procedures for playlists✅
+
+## Individual Playlists
+
+- Create "getVideos" procedure to load custom playlist's videos
+- Build custom playlist page
+- Add ability to delete a playlist
+- Add ability to remove a video from a playlist
