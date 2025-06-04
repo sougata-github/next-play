@@ -18,6 +18,8 @@ model User {
   clerkId String @unique
   name String
   imageUrl String
+  bannerKey String?
+  bannerUrl String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

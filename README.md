@@ -284,7 +284,14 @@ Why background jobs?
 
 ## Individual Playlists
 
-- Create "getVideos" procedure to load custom playlist's videos
-- Build custom playlist page
-- Add ability to delete a playlist
-- Add ability to remove a video from a playlist
+- Create "getVideos" procedure to load custom playlist's videos✅
+- Build custom playlist page✅
+- Add ability to delete a playlist✅
+- Add ability to remove a video from a playlist✅
+
+## User Page
+
+- Add "bannerUrl" and "bannerKey" to user schema
+- Create "users.getOne" procedure
+- Modify "videos.getMany" procedure to accept userId prop
+- Create userId page
