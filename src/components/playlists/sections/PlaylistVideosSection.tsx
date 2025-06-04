@@ -4,8 +4,12 @@ import InfiniteScroll from "@/components/InfiniteScroll";
 import VideoGridCard, {
   VideoGridCardSkeleton,
 } from "@/components/videos/VideoGridCard";
+import VideoRowCard, {
+  VideoRowCardSkeleton,
+} from "@/components/videos/VideoRowCard";
 
 import { DEFAULT_LIMIT } from "@/constants";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { trpc } from "@/trpc/client";
 import { useClerk } from "@clerk/nextjs";
@@ -16,9 +20,14 @@ import { toast } from "sonner";
 const PlaylistVideosSectionSkeleton = () => {
   return (
     <div>
-      <div className="flex flex-col gap-4 gap-y-10">
+      <div className="flex flex-col gap-4 gap-y-10 sm:hidden">
         {[...new Array(18)].fill(0).map((_, index) => (
           <VideoGridCardSkeleton key={index} />
+        ))}
+      </div>
+      <div className="hidden flex-col gap-4 gap-y-10 sm:flex">
+        {[...new Array(18)].fill(0).map((_, index) => (
+          <VideoRowCardSkeleton key={index} />
         ))}
       </div>
     </div>
@@ -30,8 +39,9 @@ interface Props {
 }
 
 const PlaylistVideosSectionSuspense = ({ playlistId }: Props) => {
-  const utils = trpc.useUtils();
+  const isMobile = useIsMobile();
 
+  const utils = trpc.useUtils();
   const clerk = useClerk();
 
   const removeVideo = trpc.playlists.removeVideo.useMutation({
@@ -74,29 +84,57 @@ const PlaylistVideosSectionSuspense = ({ playlistId }: Props) => {
 
   return (
     <>
-      {results.pages[0].playlistVideosWithReactions?.length > 0 ? (
-        <div className="flex flex-col gap-4 gap-y-10">
-          {results.pages.flatMap((page) =>
-            page?.playlistVideosWithReactions?.map((video) => (
-              <VideoGridCard
-                key={video.id}
-                data={video}
-                onRemove={() =>
-                  removeVideo.mutate({ playlistId, videoId: video.id })
-                }
-              />
-            ))
-          )}
+      {isMobile ? (
+        results.pages[0].playlistVideosWithReactions?.length > 0 ? (
+          <div className="flex flex-col gap-4 gap-y-10">
+            {results.pages.flatMap((page) =>
+              page?.playlistVideosWithReactions?.map((video) => (
+                <VideoGridCard
+                  data={video}
+                  key={video.id}
+                  onRemove={() =>
+                    removeVideo.mutate({ videoId: video.id, playlistId })
+                  }
+                />
+              ))
+            )}
+            <InfiniteScroll
+              isManual
+              fetchNextPage={resultsQuery.fetchNextPage}
+              isFetchingNextPage={resultsQuery.isFetchingNextPage}
+              hasNextPage={resultsQuery.hasNextPage}
+            />
+          </div>
+        ) : (
+          <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
+            Start creating some playlists
+          </p>
+        )
+      ) : results.pages[0].playlistVideosWithReactions.length > 0 ? (
+        <div>
+          <div className="flex flex-col gap-4 gap-y-10">
+            {results.pages.flatMap((page) =>
+              page?.playlistVideosWithReactions?.map((video) => (
+                <VideoRowCard
+                  data={video}
+                  key={video.id}
+                  onRemove={() =>
+                    removeVideo.mutate({ videoId: video.id, playlistId })
+                  }
+                />
+              ))
+            )}
+          </div>
+
           <InfiniteScroll
-            isManual
             fetchNextPage={resultsQuery.fetchNextPage}
             isFetchingNextPage={resultsQuery.isFetchingNextPage}
             hasNextPage={resultsQuery.hasNextPage}
           />
         </div>
       ) : (
-        <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
-          No videos in this playlist
+        <p className="m-4 text-muted-foreground/40 text-center text-lg font-medium">
+          Start creating some playlists
         </p>
       )}
     </>
