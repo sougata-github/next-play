@@ -14,16 +14,16 @@ export function useSubscription({ userId, isSubscribed, fromVideoId }: Props) {
   const utils = trpc.useUtils();
 
   const subscribe = trpc.subscriptions.subscribe.useMutation({
-    //todo: invalidate subscriptions.getMany, users.getOne
     onSuccess: () => {
       toast.success("Subscribed");
       if (fromVideoId) {
         utils.videos.getOne.invalidate({ videoId: fromVideoId });
         utils.videos.getManySubscribed.invalidate();
       }
+      utils.users.getOne.invalidate({ userId });
     },
     onError: (error) => {
-      toast.error("Couldn't subscribe");
+      toast.error("Failed to subscribe");
 
       if (error.data?.code === "UNAUTHORIZED") {
         clerk.openSignIn();
@@ -37,9 +37,10 @@ export function useSubscription({ userId, isSubscribed, fromVideoId }: Props) {
       if (fromVideoId) {
         utils.videos.getOne.invalidate({ videoId: fromVideoId });
       }
+      utils.users.getOne.invalidate({ userId });
     },
     onError: (error) => {
-      toast.error("Couldn't unsubscribe");
+      toast.error("Failed to perform action");
 
       if (error.data?.code === "UNAUTHORIZED") {
         clerk.openSignIn();

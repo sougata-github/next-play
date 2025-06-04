@@ -291,7 +291,7 @@ Why background jobs?
 
 ## User Page
 
-- Add "bannerUrl" and "bannerKey" to user schema
-- Create "users.getOne" procedure
-- Modify "videos.getMany" procedure to accept userId prop
-- Create userId page
+- Add "bannerUrl" and "bannerKey" to user schema✅
+- Create "users.getOne" procedure✅
+- Modify "videos.getMany" procedure to accept userId prop✅
+- Create userId page✅

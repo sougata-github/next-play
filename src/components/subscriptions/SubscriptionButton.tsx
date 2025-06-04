@@ -1,6 +1,9 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 
 import { Button, ButtonProps } from "../ui/button";
+import { useAuth } from "@clerk/nextjs";
 
 interface Props {
   onClick: ButtonProps["onClick"];
@@ -17,15 +20,17 @@ const SubscriptionButton = ({
   className,
   size,
 }: Props) => {
+  const { isSignedIn } = useAuth();
+
   return (
     <Button
       size={size}
-      variant={isSubscribed ? "secondary" : "default"}
+      variant={isSubscribed && isSignedIn ? "secondary" : "default"}
       className={cn("rounded-full", className)}
       onClick={onClick}
       disabled={disabled}
     >
-      {isSubscribed ? "Unsubscribe" : "Subscribe"}
+      {isSubscribed && isSignedIn ? "Unsubscribe" : "Subscribe"}
     </Button>
   );
 };

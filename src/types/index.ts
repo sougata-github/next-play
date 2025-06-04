@@ -15,3 +15,5 @@ export type SearchGetManyOutput =
 
 export type PlaylistsGetManyOutput =
   inferRouterOutputs<AppRouter>["playlists"]["getMany"];
+
+export type UserGetOneOutput = inferRouterOutputs<AppRouter>["users"]["getOne"];
