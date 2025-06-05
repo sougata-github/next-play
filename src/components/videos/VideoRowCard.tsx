@@ -49,7 +49,7 @@ export const VideoRowCardSkeleton = ({
         <VideoThumbnailSkeleton />
       </div>
 
-      <div className="flex-1- min-w-0">
+      <div className="flex-1 min-w-0">
         <div className="flex justify-between gap-x-2">
           <div className="flex-1 min-w-0">
             <Skeleton
@@ -59,6 +59,7 @@ export const VideoRowCardSkeleton = ({
                 size === "compact" && "h-4 w-[40%]"
               )}
             />
+            <Skeleton className="h-4 w-24 mt-2" />
             {size === "default" && (
               <>
                 <Skeleton className="h-4 w-[20%] mt-1" />

@@ -107,7 +107,7 @@ const PlaylistVideosSectionSuspense = ({ playlistId }: Props) => {
           </div>
         ) : (
           <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
-            Start creating some playlists
+            No videos in this playlist
           </p>
         )
       ) : results.pages[0].playlistVideosWithReactions.length > 0 ? (
@@ -134,7 +134,7 @@ const PlaylistVideosSectionSuspense = ({ playlistId }: Props) => {
         </div>
       ) : (
         <p className="m-4 text-muted-foreground/40 text-center text-lg font-medium">
-          Start creating some playlists
+          No videos in this playlist
         </p>
       )}
     </>

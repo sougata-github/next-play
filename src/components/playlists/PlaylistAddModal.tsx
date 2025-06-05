@@ -3,11 +3,12 @@
 import { trpc } from "@/trpc/client";
 import ResponsiveModal from "../ResponsiveModal";
 import { DEFAULT_LIMIT } from "@/constants";
-import { Loader, SquareCheckIcon, SquareIcon } from "lucide-react";
+import { SquareCheckIcon, SquareIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import InfiniteScroll from "../InfiniteScroll";
 import { toast } from "sonner";
 import { useClerk } from "@clerk/nextjs";
+import { Skeleton } from "../ui/skeleton";
 
 interface Props {
   videoId: string;
@@ -76,56 +77,65 @@ const PlaylistAddModal = ({ videoId, open, onOpenChange }: Props) => {
     >
       <div className="flex flex-col gap-2">
         {isLoading && (
-          <div className="flex items-center justify-center">
-            <Loader className="mt-4 size-4 animate-spin transition text-muted-foreground" />
+          <div className="flex flex-col gap-4">
+            {[
+              ...new Array(2).fill(0).map((_, index) => (
+                <div key={index} className="flex gap-4 items-center">
+                  <Skeleton className="rounded h-4 w-4" />
+                  <Skeleton className="rounded-full h-4 w-full" />
+                </div>
+              )),
+            ]}
           </div>
         )}
         {!isLoading &&
         data?.pages[0].playlistsWithHasVideo &&
         data?.pages[0].playlistsWithHasVideo.length > 0 ? (
-          data?.pages.flatMap((page) =>
-            page.playlistsWithHasVideo.map((playlist) => (
-              <Button
-                key={playlist.id}
-                variant="ghost"
-                className="w-full justify-start px-2 [&_svg]:size-5"
-                size="lg"
-                onClick={() => {
-                  if (playlist.hasVideo) {
-                    removeVideo.mutate({
-                      playlistId: playlist.id,
-                      videoId: videoId,
-                    });
-                  } else {
-                    addVideo.mutate({
-                      playlistId: playlist.id,
-                      videoId: videoId,
-                    });
-                  }
-                }}
-                disabled={addVideo.isPending || removeVideo.isPending}
-              >
-                {playlist.hasVideo ? (
-                  <SquareCheckIcon className="mr-2" />
-                ) : (
-                  <SquareIcon className="mr-2" />
-                )}
-                {playlist.name}
-              </Button>
-            ))
-          )
+          <>
+            {data?.pages.flatMap((page) =>
+              page.playlistsWithHasVideo.map((playlist) => (
+                <Button
+                  key={playlist.id}
+                  variant="ghost"
+                  className="w-full justify-start px-2 [&_svg]:size-5"
+                  size="lg"
+                  onClick={() => {
+                    if (playlist.hasVideo) {
+                      removeVideo.mutate({
+                        playlistId: playlist.id,
+                        videoId: videoId,
+                      });
+                    } else {
+                      addVideo.mutate({
+                        playlistId: playlist.id,
+                        videoId: videoId,
+                      });
+                    }
+                  }}
+                  disabled={addVideo.isPending || removeVideo.isPending}
+                >
+                  {playlist.hasVideo ? (
+                    <SquareCheckIcon className="mr-2" />
+                  ) : (
+                    <SquareIcon className="mr-2" />
+                  )}
+                  {playlist.name}
+                </Button>
+              ))
+            )}
+            {!isLoading && (
+              <InfiniteScroll
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                isManual
+              />
+            )}
+          </>
         ) : (
           <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
             Start creating some playlists
           </p>
-        )}
-        {!isLoading && (
-          <InfiniteScroll
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            fetchNextPage={fetchNextPage}
-            isManual
-          />
         )}
       </div>
     </ResponsiveModal>
