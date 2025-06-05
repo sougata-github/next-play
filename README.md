@@ -298,5 +298,11 @@ Why background jobs?
 
 ## Banner Upload
 
-- Implement "bannerUploader" endpoint in uploadthing/core.ts
-- Create BannerUploadModal
+- Implement "bannerUploader" endpoint in uploadthing/core.ts✅
+- Create BannerUploadModal✅
+
+## Subscriptions List
+
+- Create subscriptions "getMany" procedure
+- Load recent subscriptions in sidebar
+- Create all subscriptions page

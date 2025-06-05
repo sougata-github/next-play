@@ -48,7 +48,13 @@ const StudioUploader = ({ endpoint, onSuccess }: Props) => {
           className="text-sm"
           type="percentage"
         />
-        <MuxUploaderProgress muxUploader={UPLOADER_ID} type="bar" />
+        <MuxUploaderProgress
+          muxUploader={UPLOADER_ID}
+          type="bar"
+          style={{
+            "--progress-bar-fill-color": "#cb261b",
+          }}
+        />
       </MuxUploaderDrop>
     </div>
   );
