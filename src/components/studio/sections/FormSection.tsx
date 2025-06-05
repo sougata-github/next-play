@@ -103,7 +103,7 @@ const FormSectionSekeleton = () => {
 
         {/* Right Column */}
         <div className="flex flex-col gap-y-8 lg:col-span-2 justify-between">
-          <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden h-fit">
+          <div className="flex flex-col gap-4 bg-[#F9F9F9] dark:bg-muted-foreground/5 rounded-xl overflow-hidden h-fit">
             <Skeleton className="aspect-video w-full" />
             <div className="p-4 space-y-6">
               <div className="space-y-2">
@@ -470,7 +470,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
               />
             </div>
             <div className="flex flex-col gap-y-8 lg:col-span-2 lg:justify-between">
-              <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden h-fit">
+              <div className="flex flex-col gap-4 bg-[#F9F9F9] dark:bg-muted-foreground/5 rounded-xl overflow-hidden h-fit">
                 <div>
                   <VideoPlayer
                     autoPlay={false}

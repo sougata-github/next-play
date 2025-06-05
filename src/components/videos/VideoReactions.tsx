@@ -58,7 +58,7 @@ const VideoReactions = ({
         <ThumbsUpIcon
           className={cn(
             "size-5",
-            viewerReactions?.type === "LIKE" && "fill-black"
+            viewerReactions?.type === "LIKE" && "fill-black dark:fill-white"
           )}
         />
         {likes}
@@ -73,7 +73,7 @@ const VideoReactions = ({
         <ThumbsDownIcon
           className={cn(
             "size-5",
-            viewerReactions?.type === "DISLIKE" && "fill-black"
+            viewerReactions?.type === "DISLIKE" && "fill-black dark:fill-white"
           )}
         />
         {dislikes}

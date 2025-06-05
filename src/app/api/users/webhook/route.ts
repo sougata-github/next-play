@@ -1,4 +1,5 @@
 import { WebhookEvent } from "@clerk/nextjs/server";
+import { UTApi } from "uploadthing/server";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
 import { db } from "@/db";
@@ -78,11 +79,21 @@ export async function POST(req: Request) {
     }
 
     //delete user
-    await db.user.delete({
+    const deletedUser = await db.user.delete({
       where: {
         clerkId: data.id,
       },
     });
+
+    //uploadthing file cleanup
+    if (deletedUser.bannerKey) {
+      const utapi = new UTApi();
+      try {
+        await utapi.deleteFiles(deletedUser.bannerKey);
+      } catch (err) {
+        console.error("Failed to delete file from UploadThing", err);
+      }
+    }
 
     return new Response("User deleted", { status: 200 });
   }

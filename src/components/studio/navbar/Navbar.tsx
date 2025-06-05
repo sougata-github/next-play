@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/theme/ModeToggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import AuthButton from "@/components/auth/AuthButton";
 import Image from "next/image";
@@ -27,6 +28,7 @@ const Navbar = () => {
 
         <div className="flex-shrink-0 items-center flex gap-4">
           <StudioUploadModal />
+          <ModeToggle />
           <AuthButton />
         </div>
       </div>

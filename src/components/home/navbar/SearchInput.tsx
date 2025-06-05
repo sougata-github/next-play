@@ -68,7 +68,7 @@ const SearchInput = () => {
         variant="secondary"
         disabled={!value.trim()}
         type="submit"
-        className="px-5 py-2.5 bg-gray-100 rounded-r-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-5 py-2.5 bg-gray-100 dark:bg-transparent rounded-r-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <SearchIcon className="size-5" />
       </Button>

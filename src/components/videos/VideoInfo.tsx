@@ -54,7 +54,7 @@ const VideoInfo = ({ data, onRemove }: Props) => {
           <UserInfo name={data.user.name} />
         </Link>
         <Link href={`/videos/${data.id}`}>
-          <p className="text-sm text-gray-600 line-clamp-1">
+          <p className="text-sm text-muted-foreground line-clamp-1">
             {compactViews} {displayCount(data.viewCount, "view")} •{" "}
             {compactDate}{" "}
           </p>

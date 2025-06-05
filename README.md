@@ -295,3 +295,8 @@ Why background jobs?
 - Create "users.getOne" procedure✅
 - Modify "videos.getMany" procedure to accept userId prop✅
 - Create userId page✅
+
+## Banner Upload
+
+- Implement "bannerUploader" endpoint in uploadthing/core.ts
+- Create BannerUploadModal

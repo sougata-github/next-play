@@ -110,7 +110,8 @@ const CommentItem = ({ comment, variant = "comment" }: Props) => {
               >
                 <ThumbsUpIcon
                   className={cn(
-                    comment.viewerReactions?.type === "LIKE" && "fill-black"
+                    comment.viewerReactions?.type === "LIKE" &&
+                      "fill-black dark:fill-white"
                   )}
                 />
               </Button>
@@ -126,7 +127,8 @@ const CommentItem = ({ comment, variant = "comment" }: Props) => {
               >
                 <ThumbsDownIcon
                   className={cn(
-                    comment.viewerReactions?.type === "DISLIKE" && "fill-black"
+                    comment.viewerReactions?.type === "DISLIKE" &&
+                      "fill-black dark:fill-white"
                   )}
                 />
               </Button>

@@ -38,7 +38,7 @@ const VideosSectionSkeleton = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {[...new Array(2)].fill(0).map((_, index) => (
+            {[...new Array(5)].fill(0).map((_, index) => (
               <TableRow key={index}>
                 <TableCell className="pl-6">
                   <div className="flex items-center gap-4">

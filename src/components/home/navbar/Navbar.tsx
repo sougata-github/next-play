@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/theme/ModeToggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import AuthButton from "@/components/auth/AuthButton";
 import Image from "next/image";
@@ -26,6 +27,10 @@ const Navbar = () => {
         {/* Search Bar */}
         <div className="flex-1 flex justify-center max-w-[700px] mx-auto">
           <SearchInput />
+        </div>
+
+        <div className="flex-shrink-0 items-center flex gap-4">
+          <ModeToggle />
         </div>
 
         <div className="flex-shrink-0 items-center flex gap-4">
