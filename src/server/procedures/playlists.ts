@@ -35,7 +35,7 @@ export const playlistsRouter = createTRPCRouter({
       z.object({
         cursor: z
           .object({
-            id: z.string().uuid(),
+            videoId: z.string().uuid(),
             updatedAt: z.date(),
           })
           .nullish(),
@@ -58,15 +58,15 @@ export const playlistsRouter = createTRPCRouter({
               },
               {
                 updatedAt: cursor.updatedAt,
-                playlistId: {
-                  lt: cursor.id,
+                videoId: {
+                  lt: cursor.videoId,
                 },
               },
             ],
           }),
         },
 
-        orderBy: [{ createdAt: "desc" }, { playlistId: "desc" }],
+        orderBy: [{ createdAt: "desc" }, { videoId: "desc" }],
         take: limit + 1,
         include: {
           video: {
@@ -105,7 +105,7 @@ export const playlistsRouter = createTRPCRouter({
       const lastItem = items[items.length - 1];
       const nextCursor = hasMore
         ? {
-            id: lastItem.playlistId,
+            videoId: lastItem.videoId,
             updatedAt: lastItem.updatedAt,
           }
         : null;

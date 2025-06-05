@@ -21,6 +21,7 @@ export function useSubscription({ userId, isSubscribed, fromVideoId }: Props) {
         utils.videos.getManySubscribed.invalidate();
       }
       utils.users.getOne.invalidate({ userId });
+      utils.subscriptions.getMany.invalidate();
     },
     onError: (error) => {
       toast.error("Failed to subscribe");
@@ -38,6 +39,8 @@ export function useSubscription({ userId, isSubscribed, fromVideoId }: Props) {
         utils.videos.getOne.invalidate({ videoId: fromVideoId });
       }
       utils.users.getOne.invalidate({ userId });
+      utils.videos.getManySubscribed.invalidate();
+      utils.subscriptions.getMany.invalidate();
     },
     onError: (error) => {
       toast.error("Failed to perform action");

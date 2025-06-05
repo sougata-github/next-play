@@ -128,7 +128,7 @@ model Reaction {
   @@unique([userId,videoId], name: "userId_videoId")
 }
 
-model Subscription{
+model Subscription {
   id String @id @default(uuid())
 
   viewerId String

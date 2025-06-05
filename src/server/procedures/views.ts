@@ -33,7 +33,6 @@ export const videoViewsRouter = createTRPCRouter({
       });
 
       //increment viewCount for that video
-
       await db.video.update({
         where: {
           id: videoId,
