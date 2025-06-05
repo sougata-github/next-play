@@ -20,8 +20,8 @@ export const UserPageInfoSkeleton = () => {
         <div className="flex items-center gap-3">
           <Skeleton className="size-[60px] rounded-full" />
           <div className="flex-1 min-w-0">
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-6 w-48 mt-1" />
+            <Skeleton className="h-6 w-32 rounded-full" />
+            <Skeleton className="h-6 w-48 mt-1 rounded-full" />
           </div>
         </div>
 
@@ -31,8 +31,8 @@ export const UserPageInfoSkeleton = () => {
       <div className="hidden md:flex items-center gap-4">
         <Skeleton className="size-[160px] rounded-full" />
         <div className="flex-1 min-w-0">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-6 w-48 mt-4" />
+          <Skeleton className="h-8 w-64 rounded-full" />
+          <Skeleton className="h-6 w-48 mt-4 rounded-full" />
           <Skeleton className="h-10 w-64 mt-3 rounded-full" />
         </div>
       </div>
