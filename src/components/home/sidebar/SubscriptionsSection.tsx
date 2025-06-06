@@ -21,7 +21,7 @@ const PersonalSection = () => {
 
   const pathname = usePathname();
 
-  const [data] = trpc.subscriptions.getMany.useSuspenseInfiniteQuery(
+  const { data } = trpc.subscriptions.getMany.useInfiniteQuery(
     {
       limit: DEFAULT_LIMIT,
     },
@@ -35,8 +35,9 @@ const PersonalSection = () => {
       <SidebarGroupLabel>Subscriptions</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {data.pages[0].items.length > 0 ? (
-            data.pages.flatMap((page) =>
+          {data?.pages[0]?.items &&
+            data.pages[0].items.length > 0 &&
+            data?.pages.flatMap((page) =>
               page.items.map((subscription) => (
                 <SidebarMenuItem
                   key={`${subscription.creatorId}-${subscription.viewerId}`}
@@ -70,14 +71,7 @@ const PersonalSection = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))
-            )
-          ) : (
-            <p
-              className={cn("text-sm pl-2", state === "collapsed" && "hidden")}
-            >
-              No subscriptions
-            </p>
-          )}
+            )}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
