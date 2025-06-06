@@ -25,7 +25,7 @@ const PlaylistAddModal = ({ videoId, open, onOpenChange }: Props) => {
     onSuccess: (data) => {
       toast.success("Video added to playlist");
       utils.playlists.getMany.invalidate();
-      utils.playlists.getManyForVideo.invalidate();
+      utils.playlists.getManyForVideo.invalidate({ videoId: data.videoId });
       utils.playlists.getOne.invalidate({ playlistId: data.playlistId });
       utils.playlists.getPlaylistVideos.invalidate({
         playlistId: data.playlistId,
@@ -133,9 +133,11 @@ const PlaylistAddModal = ({ videoId, open, onOpenChange }: Props) => {
             )}
           </>
         ) : (
-          <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
-            Start creating some playlists
-          </p>
+          !isLoading && (
+            <p className="m-4 text-center text-lg font-medium text-muted-foreground/40">
+              Start creating some playlists
+            </p>
+          )
         )}
       </div>
     </ResponsiveModal>

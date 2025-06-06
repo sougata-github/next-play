@@ -35,6 +35,7 @@ const PlaylistHeaderSectionSuspense = ({ playlistId }: Props) => {
     onSuccess: () => {
       toast.success("Playlist deleted");
       utils.playlists.getMany.invalidate();
+      utils.playlists.getManyForVideo.invalidate();
       router.push("/playlists");
     },
     onError: (error) => {

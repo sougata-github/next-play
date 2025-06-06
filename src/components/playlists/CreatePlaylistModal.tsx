@@ -40,6 +40,7 @@ const CreatePlaylistModal = ({ open, onOpenChange }: Props) => {
     onSuccess: () => {
       toast.success("New Playlist created", {});
       utils.playlists.getMany.invalidate();
+      utils.playlists.getManyForVideo.invalidate();
       onOpenChange(false);
       form.reset();
     },
