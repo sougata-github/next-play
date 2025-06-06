@@ -303,6 +303,6 @@ Why background jobs?
 
 ## Subscriptions List
 
-- Create subscriptions "getMany" procedure
-- Load recent subscriptions in sidebar
-- Create all subscriptions page
+- Create subscriptions "getMany" procedure✅
+- Load recent subscriptions in sidebar✅
+- Create all subscriptions page✅
