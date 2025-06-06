@@ -85,7 +85,9 @@ const UserPageInfo = ({ user }: Props) => {
             asChild
             className="w-full mt-3 rounded-full"
           >
-            <Link href="/studio">Go to Studio</Link>
+            <Link prefetch href="/studio">
+              Go to Studio
+            </Link>
           </Button>
         ) : (
           <SubscriptionButton
@@ -127,7 +129,9 @@ const UserPageInfo = ({ user }: Props) => {
           </div>
           {userId === user.clerkId ? (
             <Button variant="secondary" asChild className="mt-3 rounded-full">
-              <Link href="/studio">Go to Studio</Link>
+              <Link prefetch href="/studio">
+                Go to Studio
+              </Link>
             </Button>
           ) : (
             <SubscriptionButton

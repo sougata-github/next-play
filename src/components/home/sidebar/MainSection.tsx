@@ -22,7 +22,7 @@ const MainSection = () => {
   return (
     <SidebarGroup>
       <SidebarHeader className="max-md:block hidden">
-        <Link href="/">
+        <Link prefetch href="/">
           <div className="pl-0 pt-2.5 flex items-center gap-2">
             <Image src="/logo.svg" height={40} width={40} alt="logo" />
             <p className="text-xl font-semibold tracking-tight">NextPlay</p>
@@ -44,7 +44,11 @@ const MainSection = () => {
                   }
                 }}
               >
-                <Link href={item.url} className="flex items-center gap-4">
+                <Link
+                  prefetch
+                  href={item.url}
+                  className="flex items-center gap-4"
+                >
                   <item.icon />
                   <span className="text-sm">{item.title}</span>
                 </Link>

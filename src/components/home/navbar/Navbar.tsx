@@ -14,7 +14,7 @@ const Navbar = () => {
         <div className="flex items-center flex-shrink-0">
           <SidebarTrigger />
 
-          <Link href="/">
+          <Link prefetch href="/">
             <div className="p-4 flex items-center gap-2">
               <Image src="/logo.svg" height={40} width={40} alt="logo" />
               <p className="text-xl font-semibold tracking-tight max-sm:hidden">
